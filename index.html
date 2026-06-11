@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Katak Cantik - Belajar Matematika Seru!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fredoka untuk kesan ramah anak & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #FFEBF2 0%, #E8F3FF 50%, #F5E8FF 100%);
+        }
+        /* Animasi Lompat Parabola Kiki yang Lucu (Hanya untuk Sprite Dalam) */
+        @keyframes hop {
+            0% {
+                transform: translateY(0) scaleY(1) scaleX(1);
+            }
+            45% {
+                transform: translateY(-80px) scaleY(1.25) scaleX(0.8);
+            }
+            55% {
+                transform: translateY(-80px) scaleY(1.25) scaleX(0.8);
+            }
+            90% {
+                transform: translateY(0) scaleY(0.8) scaleX(1.15);
+            }
+            100% {
+                transform: translateY(0) scaleY(1) scaleX(1);
+            }
+        }
+        .hopping {
+            animation: hop 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        /* Efek Getar jika Jawaban Salah */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake-input { 
+            animation: shake 0.15s ease-in-out 2; 
+            border-color: #EF4444 !important; 
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.6) !important; 
+        }
+
+        /* Glow effects untuk kolom aktif di Rumah Susun */
+        .glow-column-violet {
+            box-shadow: 0 0 25px 8px rgba(139, 92, 246, 0.55);
+            border: 4px solid #8B5CF6 !important;
+            transform: scale(1.05);
+        }
+        .glow-column-pink {
+            box-shadow: 0 0 25px 8px rgba(236, 72, 153, 0.55);
+            border: 4px solid #EC4899 !important;
+            transform: scale(1.05);
+        }
+        .glow-column-cyan {
+            box-shadow: 0 0 25px 8px rgba(6, 182, 212, 0.55);
+            border: 4px solid #06B6D4 !important;
+            transform: scale(1.05);
+        }
+        /* Animasi mengambang untuk elemen latar belakang */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(8deg); }
+        }
+        .floater {
+            animation: float 4.5s ease-in-out infinite;
+        }
+        /* Kustomisasi scrollbar horizontal daun teratai */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.4);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.6);
+        }
+        
+        /* Efek Glow emas untuk simpanan */
+        .glow-gold { box-shadow: 0 0 15px 5px rgba(234, 179, 8, 0.5); }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-16 overflow-x-hidden relative">
+
+    <!-- Dekorasi elemen latar belakang -->
+    <div class="absolute top-6 left-6 opacity-30 floater pointer-events-none">
+        <svg width="70" height="70" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 10 L63 38 L93 43 L70 62 L77 91 L50 75 L23 91 L30 62 L7 43 L37 38 Z" fill="#F472B6"/>
+        </svg>
+    </div>
+    <div class="absolute top-28 right-10 opacity-30 floater pointer-events-none" style="animation-delay: 1.8s;">
+        <svg width="55" height="55" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="35" fill="#A78BFA" opacity="0.6"/>
+            <path d="M50 20 L58 42 L82 42 L62 56 L70 78 L50 64 L30 78 L38 56 L18 42 L42 42 Z" fill="#FFFFFF"/>
+        </svg>
+    </div>
+
+    <!-- Header Aplikasi -->
+    <header class="w-full text-center pt-8 px-4 max-w-4xl mx-auto">
+        <span class="inline-block bg-pink-100 text-pink-600 px-5 py-1.5 rounded-full text-sm font-semibold mb-3 border border-pink-200 shadow-sm">
+            🌸 Taman Belajar Matematika Cantik 🌸
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold text-pink-600 drop-shadow-sm tracking-wide">
+            Petualangan Katak Kiki! 🐸🎀
+        </h1>
+        <p class="text-slate-600 mt-2 text-md md:text-lg max-w-2xl mx-auto">
+            Yuk, kita bantu Kiki melompat di daun teratai sampai angka 20, dan belajar menyusun istana angka yang seru sekali!
+        </p>
+    </header>
+
+    <!-- Menu Tab Utama -->
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button onclick="switchTab('tab-garis-bilangan')" id="btn-tab-garis-bilangan" class="px-6 py-4 bg-white text-pink-600 border-2 border-pink-400 rounded-2xl shadow-md font-bold text-lg hover:bg-pink-50 transition-all flex items-center gap-2 active:scale-95">
+                🐸 <span>Kiki Melompat (0 - 20)</span>
+            </button>
+            <button onclick="switchTab('tab-susun')" id="btn-tab-susun" class="px-6 py-4 bg-transparent text-slate-500 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center gap-2 active:scale-95">
+                🏰 <span>Istana Rumah Susun (Acak!)</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: GARIS BILANGAN (0 - 20) -->
+        <section id="tab-garis-bilangan" class="block bg-white rounded-3xl shadow-xl p-6 md:p-8 border-4 border-pink-100 transition-all">
+            <!-- Petunjuk Bermain -->
+            <div class="bg-pink-50 rounded-2xl p-4 border border-pink-200 mb-6 flex items-start gap-3">
+                <div class="text-3xl">💡</div>
+                <div>
+                    <h3 class="font-bold text-pink-700 text-lg">Bagaimana Kiki Melompat?</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-0.5">
+                        Kiki si katak cantik sangat suka menolong! Jika dipilih <strong class="text-pink-600">TAMBAH (+)</strong>, Kiki akan melompat <strong class="text-pink-600">MAJU ke kanan</strong>. Jika dipilih <strong class="text-indigo-600">KURANG (-)</strong>, Kiki akan melompat <strong class="text-indigo-600">MUNDUR ke kiri</strong>. Mari bantu dia!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Area Pilihan Input Simulasi -->
+            <div class="bg-violet-50 rounded-2xl p-6 border border-violet-100 mb-8">
+                <h4 class="font-bold text-violet-700 mb-4 text-center text-lg">✨ Buat Soal Lompatan Kiki ✨</h4>
+                <div class="flex flex-wrap items-center justify-center gap-4 text-xl font-bold">
+                    
+                    <!-- Mulai Dari Daun -->
+                    <div class="flex flex-col items-center w-44">
+                        <label class="text-xs text-slate-500 mb-1.5 text-center">Mulai Dari Daun</label>
+                        <select id="sim-start" class="w-full bg-white border-2 border-violet-300 rounded-xl px-4 py-2 text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400 text-center">
+                            <!-- Diisi dengan JS -->
+                        </select>
+                    </div>
+
+                    <!-- Pilihan Jalan -->
+                    <div class="flex flex-col items-center w-52">
+                        <label class="text-xs text-slate-500 mb-1.5 text-center">Pilihan Jalan</label>
+                        <select id="sim-op" class="w-full bg-white border-2 border-pink-300 rounded-xl px-4 py-2 text-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 text-center">
+                            <option value="plus">TAMBAH (Maju +)</option>
+                            <option value="minus">KURANG (Mundur -)</option>
+                        </select>
+                    </div>
+
+                    <!-- Berapa Kali Lompat -->
+                    <div class="flex flex-col items-center w-44">
+                        <label class="text-xs text-slate-500 mb-1.5 text-center">Berapa Kali Lompat</label>
+                        <select id="sim-steps" class="w-full bg-white border-2 border-violet-300 rounded-xl px-4 py-2 text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400 text-center">
+                            <!-- Diisi dengan JS -->
+                        </select>
+                    </div>
+
+                    <!-- Tombol Mulai Lompat -->
+                    <div class="flex items-end h-full pt-5">
+                        <button onclick="startFrogJourney()" id="btn-start-journey" class="bg-gradient-to-r from-pink-500 to-violet-500 hover:from-pink-600 hover:to-violet-600 text-white px-8 py-3 rounded-2xl shadow-lg font-bold text-lg hover:shadow-xl active:scale-95 transition-all">
+                            Lompat, Kiki! 🐸✨
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Peringatan batas daun -->
+                <p id="error-alert" class="text-center text-red-500 text-sm mt-3 font-semibold hidden">
+                    ⚠️ Wah! Lompatannya terlalu jauh, nanti Kiki keluar dari daun teratai paling ujung! Tolong ganti angkanya ya sayang.
+                </p>
+            </div>
+
+            <!-- Lintasan Sungai Daun Teratai (Scrollable) -->
+            <p class="text-xs text-emerald-600 mb-2 font-semibold flex items-center gap-1">
+                <span>↔️ Geser ke kanan jika ingin melihat daun angka yang lebih besar!</span>
+            </p>
+            <div class="relative py-16 bg-emerald-50 rounded-3xl border-4 border-emerald-100 overflow-x-auto custom-scrollbar shadow-inner" id="river-track-wrapper">
+                <!-- Track lintasan teratai -->
+                <div class="relative w-[2300px] h-32 px-6" id="track-container">
+                    <!-- Jembatan Garis Penghubung Daun -->
+                    <div class="absolute top-[52px] left-8 right-8 h-2 bg-emerald-300 rounded-full"></div>
+
+                    <!-- Wadah Daun Teratai (0-20) -->
+                    <div class="absolute top-4 left-0 right-0 flex justify-between px-6" id="pads-wrapper">
+                        <!-- Diisi secara dinamis dengan JS -->
+                    </div>
+
+                    <!-- Katak Kiki (Didesain ulang: Menggunakan SVG lengkap dengan lingkaran dasar penutup angka) -->
+                    <div id="cute-frog" class="absolute z-30 w-16 h-16 pointer-events-none" style="top: -12px; left: 0px; transition: left 0.6s cubic-bezier(0.25, 1, 0.5, 1);">
+                        <!-- Sprite dalam sebagai pengatur animasi melompat ke atas -->
+                        <div id="cute-frog-sprite" class="w-full h-full">
+                            <svg class="w-full h-full drop-shadow-md" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Lingkaran dasar solid untuk menutupi daun dan angka di bawahnya -->
+                                <circle cx="50" cy="50" r="46" fill="#A7F3D0" stroke="#059669" stroke-width="3"/>
+                                
+                                <!-- Kaki Luar Katak -->
+                                <ellipse cx="25" cy="75" rx="12" ry="8" fill="#4ADE80" stroke="#166534" stroke-width="3"/>
+                                <ellipse cx="75" cy="75" rx="12" ry="8" fill="#4ADE80" stroke="#166534" stroke-width="3"/>
+                                
+                                <!-- Jari Kaki Katak -->
+                                <circle cx="16" cy="77" r="4" fill="#166534"/>
+                                <circle cx="25" cy="80" r="4" fill="#166534"/>
+                                <circle cx="84" cy="77" r="4" fill="#166534"/>
+                                <circle cx="75" cy="80" r="4" fill="#166534"/>
+                                
+                                <!-- Tubuh Katak -->
+                                <ellipse cx="50" cy="60" rx="26" ry="22" fill="#4ADE80" stroke="#166534" stroke-width="3"/>
+                                
+                                <!-- Perut Putih Cantik -->
+                                <ellipse cx="50" cy="64" rx="18" ry="14" fill="#F0FDF4"/>
+                                
+                                <!-- Mata Bulat Menggemaskan dengan Efek Cahaya -->
+                                <circle cx="33" cy="36" r="11" fill="#4ADE80" stroke="#166534" stroke-width="3"/>
+                                <circle cx="33" cy="36" r="7" fill="white"/>
+                                <circle cx="34" cy="36" r="4" fill="#111827"/>
+                                <circle cx="32" cy="34" r="1.5" fill="white"/>
+
+                                <circle cx="67" cy="36" r="11" fill="#4ADE80" stroke="#166534" stroke-width="3"/>
+                                <circle cx="67" cy="36" r="7" fill="white"/>
+                                <circle cx="66" cy="36" r="4" fill="#111827"/>
+                                <circle cx="65" cy="34" r="1.5" fill="white"/>
+
+                                <!-- Permata Dahi Merah Merona -->
+                                <circle cx="50" cy="28" r="3.5" fill="#EF4444"/>
+
+                                <!-- Rona Pipi Merah (Blush) -->
+                                <circle cx="27" cy="52" r="5" fill="#FB7185"/>
+                                <circle cx="73" cy="52" r="5" fill="#FB7185"/>
+
+                                <!-- Mulut Senyum Bahagia Kiki -->
+                                <path d="M42 54 Q50 62 58 54" stroke="#166534" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+                                <!-- Pita Pink Cantik Kiki -->
+                                <path d="M50 24 C45 18, 42 28, 50 25 C58 28, 55 18, 50 24 Z" fill="#F472B6" stroke="#BE185D" stroke-width="2"/>
+                                <circle cx="50" cy="24" r="3" fill="#BE185D"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Papan Cerita & Narasi Asisten -->
+            <div class="mt-8 flex flex-col items-center">
+                <span class="bg-pink-500 text-white px-5 py-1 rounded-full text-xs font-bold -mb-3 z-10 shadow-sm tracking-wide">ASISTEN KIKI BERBICARA:</span>
+                <div class="w-full max-w-2xl bg-pink-50 border-2 border-pink-200 rounded-2xl p-6 text-center shadow-sm">
+                    <p id="story-bubble" class="text-xl font-bold text-pink-700">"Halo cantik! Aku Kiki si katak pita pink. Coba pilih angka di atas lalu klik tombol melompat!"</p>
+                    <p id="story-bubble-sub" class="text-xs text-pink-500 mt-2 font-semibold">Kamu pintar sekali sayang! Ayo kita coba buat soal yang lain!</p>
+                    <div id="sub-step-bubble" class="text-slate-600 mt-2 text-sm italic hidden"></div>
+                </div>
+            </div>
+
+            <!-- Tombol Navigasi Manual Mandiri -->
+            <div class="flex justify-center flex-wrap gap-4 mt-8">
+                <button onclick="manualHop(-1)" class="px-5 py-3 bg-white text-slate-700 font-bold border-2 border-slate-200 hover:border-pink-300 rounded-xl hover:bg-pink-50 transition-all flex items-center gap-1.5 active:scale-95">
+                    👈 Mundur 1 Daun
+                </button>
+                <button onclick="resetToZero()" class="px-5 py-3 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-all active:scale-95">
+                    🔄 Taruh Kiki di Daun 0
+                </button>
+                <button onclick="manualHop(1)" class="px-5 py-3 bg-white text-pink-600 font-bold border-2 border-slate-200 hover:border-pink-300 rounded-xl hover:bg-pink-50 transition-all flex items-center gap-1.5 active:scale-95">
+                    Maju 1 Daun 👉
+                </button>
+            </div>
+        </section>
+
+
+        <!-- TAB 2: RUMAH SUSUN (MODERN CARRY/BORROW) -->
+        <section id="tab-susun" class="hidden bg-white rounded-3xl shadow-xl p-6 md:p-8 border-4 border-violet-100 transition-all">
+            <!-- Instruksi Lucu -->
+            <div class="bg-violet-50 rounded-2xl p-4 border border-violet-200 mb-6 flex items-start gap-3">
+                <div class="text-3xl">🏰</div>
+                <div>
+                    <h3 class="font-bold text-violet-700 text-lg">Rahasia Mengisi Istana Angka:</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-0.5">
+                        Setiap kolom adalah kamar angka istana! Kamar depan adalah <strong class="text-cyan-500">Ratusan</strong>, kamar tengah adalah <strong class="text-pink-500">Puluhan</strong>, dan kamar belakang adalah <strong class="text-purple-500">Satuan</strong>. Ingat kunci ajaibnya: <strong class="text-purple-600 underline">KITA HARUS HITUNG MULAI DARI KAMAR BELAKANG (SATUAN) DULU!</strong> Baru berjalan maju ke kamar-kamar depannya.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Kontrol Pilihan Tingkatan Tantangan -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Kolom Pilihan Level -->
+                <div class="lg:col-span-1 bg-gradient-to-br from-pink-50 to-violet-50 rounded-2xl p-5 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+                            <span>🎮 Pilihlah Level Tantangan:</span>
+                        </h4>
+                        
+                        <!-- Pilihan Tipe Tantangan -->
+                        <div class="flex flex-col gap-2.5">
+                            <button onclick="setGameCategory('satuan-puluhan')" id="btn-cat-1" class="py-3 px-4 bg-white border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between">
+                                <span>🧸 Satuan & Puluhan</span>
+                                <span class="bg-pink-100 text-pink-600 px-2 py-0.5 rounded text-xs">Mudah</span>
+                            </button>
+                            <button onclick="setGameCategory('puluhan-puluhan')" id="btn-cat-2" class="py-3 px-4 bg-white border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between">
+                                <span>🎈 Puluhan & Puluhan</span>
+                                <span class="bg-violet-100 text-violet-600 px-2 py-0.5 rounded text-xs">Sedang</span>
+                            </button>
+                            <button onclick="setGameCategory('puluhan-ratusan')" id="btn-cat-3" class="py-3 px-4 bg-white border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between">
+                                <span>🏰 Puluhan & Ratusan</span>
+                                <span class="bg-cyan-100 text-cyan-600 px-2 py-0.5 rounded text-xs">Hebat!</span>
+                            </button>
+                        </div>
+
+                        <!-- Pilih Operasi Tambah/Kurang -->
+                        <div class="mt-5">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Simbol Hitung:</label>
+                            <div class="flex gap-2">
+                                <button onclick="setGameOperator('plus')" id="btn-op-plus" class="flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all">
+                                    Tambah (+)
+                                </button>
+                                <button onclick="setGameOperator('minus')" id="btn-op-minus" class="flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all">
+                                    Kurang (-)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Ganti Angka Baru -->
+                    <button onclick="generateRandomQuiz()" class="mt-6 w-full py-3.5 bg-gradient-to-r from-pink-500 to-violet-500 text-white font-extrabold rounded-2xl shadow-md hover:shadow-lg hover:from-pink-600 hover:to-violet-600 transition-all text-md flex items-center justify-center gap-2 active:scale-95">
+                        🎲 Ganti Angka Baru! 🎲
+                    </button>
+                </div>
+
+                <!-- Rumah Susun Visual Grid -->
+                <div class="lg:col-span-2 bg-slate-50 rounded-3xl p-6 border-2 border-dashed border-slate-200 flex flex-col items-center">
+                    <h4 id="math-title" class="font-bold text-slate-700 text-xl mb-6">Penjumlahan: 145 + 32</h4>
+                    
+                    <div class="flex flex-col items-center w-full max-w-sm">
+                        <!-- Kotak Simpan/Pinjam (Carry/Borrow) -->
+                        <div class="grid grid-cols-3 gap-3 w-full mb-1">
+                            <div id="carry-r" class="h-10 bg-slate-50 border border-dashed border-slate-200 rounded-lg flex items-center justify-center font-bold opacity-0 text-sm transition-all"></div>
+                            <div id="carry-p" class="h-10 bg-slate-50 border border-dashed border-slate-200 rounded-lg flex items-center justify-center font-bold opacity-0 text-sm transition-all"></div>
+                            <div id="carry-s" class="h-10 bg-slate-50 border border-dashed border-slate-200 rounded-lg flex items-center justify-center font-bold opacity-0 text-sm transition-all"></div>
+                        </div>
+
+                        <!-- Label Kamar/Label Kolom -->
+                        <div class="grid grid-cols-3 gap-3 w-full text-center mb-2 font-bold text-xs md:text-sm">
+                            <div class="bg-cyan-100 text-cyan-700 py-1.5 rounded-xl border border-cyan-200">Kamar Ratusan</div>
+                            <div class="bg-pink-100 text-pink-700 py-1.5 rounded-xl border border-pink-200">Kamar Puluhan</div>
+                            <div class="bg-purple-100 text-purple-700 py-1.5 rounded-xl border border-purple-200">Kamar Satuan</div>
+                        </div>
+
+                        <!-- Baris Angka Pertama (Atas) -->
+                        <div class="grid grid-cols-3 gap-3 w-full mb-2 text-center">
+                            <div id="box-r1" class="bg-white rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-cyan-600 transition-all duration-300">1</div>
+                            <div id="box-p1" class="bg-white rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-pink-600 transition-all duration-300">4</div>
+                            <div id="box-s1" class="bg-white rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-purple-600 transition-all duration-300">5</div>
+                        </div>
+
+                        <!-- Baris Angka Kedua (Bawah) -->
+                        <div class="grid grid-cols-3 gap-3 w-full mb-3 text-center relative">
+                            <div id="box-r2" class="bg-white rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-cyan-600 transition-all duration-300">-</div>
+                            <div id="box-p2" class="bg-white rounded-2xl border-2 p-4 text-3xl font-extrabold text-center text-pink-600 transition-all duration-300">3</div>
+                            <div id="box-s2" class="bg-white rounded-2xl border-2 p-4 text-3xl font-extrabold text-center text-purple-600 transition-all duration-300">2</div>
+                            <!-- Operator (+ / -) -->
+                            <div id="math-operator" class="absolute -left-9 top-1/2 -translate-y-1/2 text-4xl font-extrabold text-pink-500">+</div>
+                        </div>
+
+                        <!-- Garis Pembatas Rumah Susun -->
+                        <div class="w-full h-1.5 bg-slate-400 rounded-full mb-3 relative">
+                            <span class="absolute right-0 -top-4 text-xs font-semibold text-slate-400">Garis Jawaban</span>
+                        </div>
+
+                        <!-- Baris Angka Hasil (Input Mandiri) -->
+                        <div class="grid grid-cols-3 gap-3 w-full mb-6 text-center">
+                            <!-- Hasil Ratusan -->
+                            <input type="text" id="box-r-res" inputmode="numeric" pattern="[0-9]*" maxlength="1" 
+                                   class="bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-all duration-300 disabled:opacity-80 animate-pulse"
+                                   placeholder="?" oninput="checkInput('r')" disabled>
+                            <!-- Hasil Puluhan -->
+                            <input type="text" id="box-p-res" inputmode="numeric" pattern="[0-9]*" maxlength="1" 
+                                   class="bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-pink-300 transition-all duration-300 disabled:opacity-80"
+                                   placeholder="?" oninput="checkInput('p')" disabled>
+                            <!-- Hasil Satuan -->
+                            <input type="text" id="box-s-res" inputmode="numeric" pattern="[0-9]*" maxlength="1" 
+                                   class="bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 disabled:opacity-80"
+                                   placeholder="?" oninput="checkInput('s')" disabled>
+                        </div>
+
+                        <!-- Tombol Panduan Langkah -->
+                        <button id="btn-next-step" onclick="advanceStep()" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all text-md flex items-center justify-center gap-2 active:scale-95">
+                            <span>Mulai Hitung Langkah 1</span> ➜
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Papan Petunjuk Langkah Istana -->
+            <div id="step-narrator-box" class="mt-8 bg-violet-50 border-2 border-violet-200 rounded-2xl p-6 text-center max-w-xl mx-auto shadow-inner">
+                <p id="step-narrator-text" class="text-lg font-bold text-violet-700">
+                    "Selamat datang di Istana Rumah Susun! Silakan pilih kategori di sebelah kiri, lalu mulailah berhitung."
+                </p>
+                <!-- Pembantu Perhitungan Kecil -->
+                <div id="calculator-helper" class="mt-4 bg-white p-3 rounded-xl inline-flex items-center gap-3 border border-violet-100 hidden">
+                    <span class="text-xs text-violet-400 uppercase tracking-wider font-semibold">Coretan Kertas Kiki:</span>
+                    <span id="calc-formula" class="font-bold text-lg text-slate-700">5 + 2 = 7</span>
+                    <span class="text-emerald-500 font-bold">✨ Hebat!</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script Engine Utama Game -->
+    <script>
+        // SOUND GENERATOR (WEB AUDIO API)
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Suara Katak Melompat Lucu
+        function playJumpSound() {
+            initAudio();
+            if(!audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(160, audioCtx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.35); 
+                
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } catch(e) {}
+        }
+
+        // Suara Harmoni Merdu ketika Sukses
+        function playSuccessSound() {
+            initAudio();
+            if(!audioCtx) return;
+            try {
+                let now = audioCtx.currentTime;
+                let notes = [523.25, 659.25, 783.99, 1046.50]; // Nada C5, E5, G5, C6
+                notes.forEach((freq, index) => {
+                    let osc = audioCtx.createOscillator();
+                    let gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.08);
+                    
+                    gain.gain.setValueAtTime(0.15, now + index * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + index * 0.08 + 0.5);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + index * 0.08);
+                    osc.stop(now + index * 0.08 + 0.5);
+                });
+            } catch(e) {}
+        }
+
+        // Efek Suara Salah (Buzzer Rendah "Tetot!")
+        function playWarningSound() {
+            initAudio();
+            if(!audioCtx) return;
+            try {
+                let now = audioCtx.currentTime;
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(130, now);
+                osc.frequency.setValueAtTime(90, now + 0.15);
+                
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.45);
+            } catch(e) {}
+        }
+
+
+        // KONFIGURASI DAN STATE TAB 1 (Melompat 0 - 20)
+        let currentFrogIndex = 3;
+        const totalPads = 21; // Daun 0 sampai 20
+
+        // Fungsi Tukar Tab
+        function switchTab(tabId) {
+            initAudio();
+            document.getElementById('tab-garis-bilangan').classList.add('hidden');
+            document.getElementById('tab-susun').classList.add('hidden');
+            
+            document.getElementById('btn-tab-garis-bilangan').className = "px-6 py-4 bg-transparent text-slate-500 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center gap-2 active:scale-95";
+            document.getElementById('btn-tab-susun').className = "px-6 py-4 bg-transparent text-slate-500 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center gap-2 active:scale-95";
+            
+            if (tabId === 'tab-garis-bilangan') {
+                document.getElementById('tab-garis-bilangan').classList.remove('hidden');
+                document.getElementById('btn-tab-garis-bilangan').className = "px-6 py-4 bg-white text-pink-600 border-2 border-pink-400 rounded-2xl shadow-md font-bold text-lg hover:bg-pink-50 transition-all flex items-center gap-2 active:scale-95";
+                setTimeout(updateFrogPosition, 100);
+            } else {
+                document.getElementById('tab-susun').classList.remove('hidden');
+                document.getElementById('btn-tab-susun').className = "px-6 py-4 bg-white text-violet-600 border-2 border-violet-400 rounded-2xl shadow-md font-bold text-lg hover:bg-violet-50 transition-all flex items-center gap-2 active:scale-95";
+                resetMathSteps();
+            }
+        }
+
+        // Inisialisasi Dropdown Pilihan
+        function initFrogTrackOptions() {
+            const startSel = document.getElementById('sim-start');
+            startSel.innerHTML = '';
+            for (let i = 0; i <= 20; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `Daun ${i}`;
+                if (i === 3) opt.selected = true;
+                startSel.appendChild(opt);
+            }
+
+            const stepsSel = document.getElementById('sim-steps');
+            stepsSel.innerHTML = '';
+            for (let i = 1; i <= 15; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `${i} Lompatan`;
+                if (i === 4) opt.selected = true;
+                stepsSel.appendChild(opt);
+            }
+        }
+
+        // Membuat Daun Teratai di DOM
+        function generateLilyPads() {
+            const padsContainer = document.getElementById('pads-wrapper');
+            padsContainer.innerHTML = '';
+            
+            for (let i = 0; i < totalPads; i++) {
+                let strokeColor = "#0D9488";
+                let padColor = "#5EEAD4";
+                if (i % 2 === 0) {
+                    padColor = "#2DD4BF";
+                }
+                
+                padsContainer.innerHTML += `
+                    <div id="pad-${i}" class="relative flex flex-col items-center w-[90px] transition-all">
+                        <div class="w-12 h-12 flex items-center justify-center text-emerald-950 font-extrabold cursor-pointer relative hover:scale-110 active:scale-90 duration-200" onclick="teleportFrog(${i})">
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" fill="${padColor}" stroke="${strokeColor}" stroke-width="3"/>
+                                <path d="M 50 8 A 42 42 0 0 1 85 30 L 50 50 Z" fill="#14B8A6" opacity="0.3"/>
+                            </svg>
+                            <span class="relative z-10 text-lg text-emerald-900">${i}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Update Posisi Horizontal Katak Kiki (Dengan Auto-scroll Sungai)
+        function updateFrogPosition(smooth = true) {
+            const padEl = document.getElementById(`pad-${currentFrogIndex}`);
+            const frogEl = document.getElementById('cute-frog');
+            const wrapper = document.getElementById('river-track-wrapper');
+            
+            if (padEl && frogEl) {
+                const padLeft = padEl.offsetLeft;
+                const padWidth = padEl.offsetWidth;
+                const frogWidth = frogEl.offsetWidth;
+                const finalLeft = padLeft + (padWidth / 2) - (frogWidth / 2);
+                
+                if (smooth) {
+                    frogEl.style.transition = "left 0.6s cubic-bezier(0.25, 1, 0.5, 1)";
+                } else {
+                    frogEl.style.transition = "none";
+                }
+                frogEl.style.left = `${finalLeft}px`;
+
+                // Auto-scroll sungai agar Kiki selalu di tengah fokus layar anak
+                if (wrapper) {
+                    const scrollTarget = padLeft - wrapper.offsetWidth / 2 + padWidth / 2;
+                    wrapper.scrollTo({
+                        left: scrollTarget,
+                        behavior: smooth ? 'smooth' : 'auto'
+                    });
+                }
+            }
+        }
+
+
+        // Validasi Formula agar Kiki tidak tercebur (Maksimal Daun 0 - 20)
+        function validateFormulas() {
+            const startVal = parseInt(document.getElementById('sim-start').value);
+            const opVal = document.getElementById('sim-op').value;
+            const stepsVal = parseInt(document.getElementById('sim-steps').value);
+            const errAlert = document.getElementById('error-alert');
+            const btnJourney = document.getElementById('btn-start-journey');
+
+            let finalValue = startVal;
+            if (opVal === 'plus') {
+                finalValue = startVal + stepsVal;
+            } else {
+                finalValue = startVal - stepsVal;
+            }
+
+            if (finalValue < 0 || finalValue > 20) {
+                errAlert.classList.remove('hidden');
+                btnJourney.disabled = true;
+                btnJourney.classList.add('opacity-50', 'cursor-not-allowed');
+                return false;
+            } else {
+                errAlert.classList.add('hidden');
+                btnJourney.disabled = false;
+                btnJourney.classList.remove('opacity-50', 'cursor-not-allowed');
+                return true;
+            }
+        }
+
+        // Pasang pendengar peristiwa (event listener)
+        document.getElementById('sim-start').addEventListener('change', validateFormulas);
+        document.getElementById('sim-op').addEventListener('change', validateFormulas);
+        document.getElementById('sim-steps').addEventListener('change', validateFormulas);
+
+
+        // Jalankan Animasi Lompat Berurutan (Mesin Langkah Parabola Utama)
+        let isMoving = false;
+        async function startFrogJourney() {
+            if (isMoving) return;
+            if (!validateFormulas()) {
+                playWarningSound();
+                return;
+            }
+
+            isMoving = true;
+            document.getElementById('btn-start-journey').disabled = true;
+            document.getElementById('btn-start-journey').classList.add('opacity-50');
+
+            const startVal = parseInt(document.getElementById('sim-start').value);
+            const opVal = document.getElementById('sim-op').value;
+            const stepsVal = parseInt(document.getElementById('sim-steps').value);
+            const storyBubble = document.getElementById('story-bubble');
+            const subStep = document.getElementById('sub-step-bubble');
+
+            subStep.classList.remove('hidden');
+
+            // Taruh Kiki di posisi awal mula
+            currentFrogIndex = startVal;
+            updateFrogPosition(false);
+            storyBubble.innerHTML = `"Kiki bersiap di daun <strong class='text-pink-600 font-extrabold text-2xl'>${startVal}</strong>. Yuk bantu Kiki menghitung!"`;
+            subStep.innerHTML = "Memakai sabuk pengaman... Lompatan akan segera dimulai!";
+            await wait(1400);
+
+            let sign = (opVal === 'plus') ? 1 : -1;
+            let directionVerb = (opVal === 'plus') ? 'Maju' : 'Mundur';
+
+            // Animasi langkah satu per satu dengan efek parabola hopping
+            for (let i = 1; i <= stepsVal; i++) {
+                let nextIndex = currentFrogIndex + sign;
+                
+                // Pemicu animasi melompat vertikal pada sprite dalam
+                playJumpSound();
+                const sprite = document.getElementById('cute-frog-sprite');
+                sprite.classList.add('hopping');
+                
+                // Geser koordinat mendatar
+                currentFrogIndex = nextIndex;
+                updateFrogPosition(true);
+
+                storyBubble.innerHTML = `"HUP! Langkah ke-${i}, Kiki ada di daun <strong class='text-pink-600 font-extrabold text-2xl'>${currentFrogIndex}</strong>!"`;
+                subStep.innerHTML = `Hitungan detail: ${startVal} ${opVal === 'plus' ? 'ditambah' : 'dikurangi'} ${i} lompatan...`;
+
+                await wait(600); // Tunggu sampai durasi hop selesai
+                sprite.classList.remove('hopping');
+                await wait(400); // Jeda kecil sebelum lompatan berikutnya
+            }
+
+            // Musik selebrasi berhasil!
+            playSuccessSound();
+            let finalMathText = `${startVal} ${opVal === 'plus' ? '+' : '-'} ${stepsVal} = ${currentFrogIndex}`;
+            storyBubble.innerHTML = `"YEEEAAY! 💖 Kiki berhasil tiba di daun angka <strong class='text-pink-600 font-extrabold text-3xl'>${currentFrogIndex}</strong>!"`;
+            document.getElementById('story-bubble-sub').innerHTML = `Maka hasil dari <b>${startVal} ${opVal==='plus'?'+':'-'} ${stepsVal} = ${currentFrogIndex}</b>. <br>Kamu pintar sekali sayang! Ayo kita coba buat soal yang lain!`;
+            subStep.innerHTML = "Luar biasa! Ayo coba tantangan angka lainnya.";
+
+            isMoving = false;
+            document.getElementById('btn-start-journey').disabled = false;
+            document.getElementById('btn-start-journey').classList.remove('opacity-50');
+        }
+
+        // Navigasi Manual Katak
+        function manualHop(direction) {
+            let nextVal = currentFrogIndex + direction;
+            if (nextVal >= 0 && nextVal <= 20) {
+                playJumpSound();
+                const sprite = document.getElementById('cute-frog-sprite');
+                sprite.classList.add('hopping');
+                currentFrogIndex = nextVal;
+                updateFrogPosition(true);
+                document.getElementById('story-bubble').innerHTML = `"Hup! Kiki melompat mandiri ke daun <strong class='text-pink-600 font-extrabold text-2xl'>${currentFrogIndex}</strong>!"`;
+                document.getElementById('sub-step-bubble').classList.add('hidden');
+                
+                setTimeout(() => {
+                    sprite.classList.remove('hopping');
+                }, 600);
+            } else {
+                playWarningSound();
+            }
+        }
+
+        function resetToZero() {
+            playJumpSound();
+            currentFrogIndex = 0;
+            updateFrogPosition(true);
+            document.getElementById('story-bubble').innerHTML = `"Kiki sudah ditaruh kembali di daun <strong class='text-pink-600 font-extrabold text-2xl'>0</strong>. Siap melompat lagi!"`;
+            document.getElementById('sub-step-bubble').classList.add('hidden');
+        }
+
+        function teleportFrog(index) {
+            playJumpSound();
+            const sprite = document.getElementById('cute-frog-sprite');
+            sprite.classList.add('hopping');
+            currentFrogIndex = index;
+            updateFrogPosition(true);
+            document.getElementById('story-bubble').innerHTML = `"Wuuush! Kiki meluncur langsung ke daun <strong class='text-pink-600 font-extrabold text-2xl'>${currentFrogIndex}</strong>."`;
+            document.getElementById('sub-step-bubble').classList.add('hidden');
+            setTimeout(() => {
+                sprite.classList.remove('hopping');
+            }, 600);
+        }
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+
+
+        // ==========================================
+        // RUMAH SUSUN ENGINE (DENGAN SIMPAN & PINJAM)
+        // ==========================================
+        
+        let mathState = {
+            category: 'puluhan-puluhan', 
+            op: 'plus', 
+            num1: 34,
+            num2: 12,
+            currentStep: 0, // 0:Siap, 1:Satuan, 2:Puluhan, 3:Ratusan, 4:Selesai
+            maxSteps: 2, 
+            carryP: 0,
+            carryR: 0,
+            borrowS: false,
+            borrowP: false
+        };
+
+        // Mengatur gaya container simpan/pinjam di atas kolom
+        function setCarryBorrowStyle(id, type, value) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            
+            el.innerText = value || '';
+            el.className = "h-10 border-2 border-dashed rounded-lg flex items-center justify-center font-bold text-sm transition-all ";
+            
+            if (type === 'simpan') {
+                el.classList.add('bg-yellow-50', 'border-yellow-300', 'text-yellow-600', 'opacity-100', 'glow-gold');
+            } else if (type === 'pinjam-kurang') {
+                el.classList.add('bg-red-50', 'border-red-300', 'text-red-500', 'opacity-100');
+            } else if (type === 'pinjam-tambah') {
+                el.classList.add('bg-blue-50', 'border-blue-300', 'text-blue-500', 'opacity-100');
+            } else {
+                el.classList.add('bg-slate-50', 'border-slate-200', 'opacity-0');
+            }
+        }
+
+        // Render perubahan gaya tombol kategori aktif
+        function setGameCategory(cat) {
+            initAudio();
+            mathState.category = cat;
+            
+            document.getElementById('btn-cat-1').className = "py-3 px-4 bg-white text-slate-600 border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between";
+            document.getElementById('btn-cat-2').className = "py-3 px-4 bg-white text-slate-600 border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between";
+            document.getElementById('btn-cat-3').className = "py-3 px-4 bg-white text-slate-600 border-2 border-slate-200 hover:border-pink-300 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between";
+            
+            if (cat === 'satuan-puluhan') {
+                document.getElementById('btn-cat-1').className = "py-3 px-4 bg-pink-50 text-pink-700 border-2 border-pink-400 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between shadow-inner";
+            } else if (cat === 'puluhan-puluhan') {
+                document.getElementById('btn-cat-2').className = "py-3 px-4 bg-violet-50 text-violet-700 border-2 border-violet-400 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between shadow-inner";
+            } else if (cat === 'puluhan-ratusan') {
+                document.getElementById('btn-cat-3').className = "py-3 px-4 bg-cyan-50 text-cyan-700 border-2 border-cyan-400 rounded-xl font-bold text-left transition-all text-sm flex items-center justify-between shadow-inner";
+            }
+
+            generateRandomQuiz();
+        }
+
+        function setGameOperator(op) {
+            initAudio();
+            mathState.op = op;
+
+            document.getElementById('btn-op-plus').className = "flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all bg-white text-slate-600 border-slate-200 hover:border-pink-300";
+            document.getElementById('btn-op-minus').className = "flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all bg-white text-slate-600 border-slate-200 hover:border-pink-300";
+
+            if (op === 'plus') {
+                document.getElementById('btn-op-plus').className = "flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all bg-pink-100 text-pink-700 border-pink-400 shadow-sm";
+            } else {
+                document.getElementById('btn-op-minus').className = "flex-1 py-2 rounded-lg font-bold border-2 text-center transition-all bg-violet-100 text-violet-700 border-violet-400 shadow-sm";
+            }
+
+            generateRandomQuiz();
+        }
+
+        // Generator Soal Bebas yang Mendukung Carry (Simpan) & Borrow (Pinjam)
+        function generateRandomQuiz() {
+            let d1 = [0, 0, 0]; 
+            let d2 = [0, 0, 0];
+            const op = mathState.op;
+
+            if (mathState.category === 'satuan-puluhan') {
+                // n1: Puluhan, n2: Satuan
+                let p1 = Math.floor(Math.random() * 9) + 1; // 1-9
+                let s1 = Math.floor(Math.random() * 10);    // 0-9
+                let s2 = Math.floor(Math.random() * 9) + 1; // 1-9
+                
+                d1 = [0, p1, s1];
+                d2 = [0, 0, s2];
+                mathState.maxSteps = 2; 
+
+            } else if (mathState.category === 'puluhan-puluhan') {
+                // n1: Puluhan, n2: Puluhan
+                let p1 = Math.floor(Math.random() * 9) + 1;
+                let s1 = Math.floor(Math.random() * 10);
+                let p2 = Math.floor(Math.random() * 9) + 1;
+                let s2 = Math.floor(Math.random() * 10);
+                
+                d1 = [0, p1, s1];
+                d2 = [0, p2, s2];
+                mathState.maxSteps = 2;
+
+            } else if (mathState.category === 'puluhan-ratusan') {
+                // n1: Ratusan, n2: Puluhan
+                let r1 = Math.floor(Math.random() * 9) + 1; 
+                let p1 = Math.floor(Math.random() * 10);    
+                let s1 = Math.floor(Math.random() * 10);    
+                let p2 = Math.floor(Math.random() * 9) + 1;
+                let s2 = Math.floor(Math.random() * 10);
+                
+                d1 = [r1, p1, s1];
+                d2 = [0, p2, s2];
+                mathState.maxSteps = 3; 
+            }
+
+            // Pastikan jika pengurangan, angka atas >= angka bawah
+            let val1 = d1[0]*100 + d1[1]*10 + d1[2];
+            let val2 = d2[0]*100 + d2[1]*10 + d2[2];
+            if (op === 'minus' && val1 < val2) {
+                // Tukar nilai agar hasil pengurangan tidak negatif
+                [d1, d2] = [d2, d1];
+            }
+
+            mathState.num1 = d1[0]*100 + d1[1]*10 + d1[2];
+            mathState.num2 = d2[0]*100 + d2[1]*10 + d2[2];
+            mathState.currentStep = 0;
+            mathState.carryP = 0;
+            mathState.carryR = 0;
+            mathState.borrowS = false;
+            mathState.borrowP = false;
+
+            displayQuizValues(d1, d2);
+        }
+
+        function displayQuizValues(d1, d2) {
+            const opLabel = mathState.op === 'plus' ? 'Penjumlahan' : 'Pengurangan';
+            const finalResult = mathState.op === 'plus' ? (mathState.num1 + mathState.num2) : (mathState.num1 - mathState.num2);
+            
+            document.getElementById('math-title').innerHTML = `Tantangan ${opLabel}: <span class="bg-indigo-100 px-3 py-1 rounded-xl text-indigo-700 ml-1 inline-block">${mathState.num1} ${mathState.op === 'plus' ? '+' : '-'} ${mathState.num2}</span>`;
+            document.getElementById('math-operator').innerText = mathState.op === 'plus' ? '+' : '-';
+
+            // KONDISI ADAPTIF RATUSAN: Jika hasil akhir penjumlahan / angka awal >= 100, tampilkan kolom ratusan secara utuh
+            const needsRatusan = (mathState.num1 >= 100 || mathState.num2 >= 100 || finalResult >= 100);
+            mathState.maxSteps = needsRatusan ? 3 : 2;
+
+            if (needsRatusan) {
+                document.getElementById('box-r1').innerText = d1[0] > 0 ? d1[0] : " ";
+                document.getElementById('box-r1').classList.remove('opacity-30');
+                
+                document.getElementById('box-r2').innerText = d2[0] > 0 ? d2[0] : " ";
+                document.getElementById('box-r2').classList.remove('opacity-30');
+                
+                document.getElementById('box-r-res').style.visibility = 'visible';
+            } else {
+                document.getElementById('box-r1').innerText = " ";
+                document.getElementById('box-r1').classList.add('opacity-30');
+                
+                document.getElementById('box-r2').innerText = " ";
+                document.getElementById('box-r2').classList.add('opacity-30');
+                
+                document.getElementById('box-r-res').style.visibility = 'hidden';
+            }
+
+            // Tampilkan puluhan
+            if (d1[1] === 0 && d1[0] === 0) {
+                document.getElementById('box-p1').innerText = " ";
+                document.getElementById('box-p1').classList.add('opacity-30');
+            } else {
+                document.getElementById('box-p1').innerText = d1[1];
+                document.getElementById('box-p1').classList.remove('opacity-30');
+            }
+
+            if (d2[1] === 0 && d2[0] === 0) {
+                document.getElementById('box-p2').innerText = " ";
+                document.getElementById('box-p2').classList.add('opacity-30');
+            } else {
+                document.getElementById('box-p2').innerText = d2[1];
+                document.getElementById('box-p2').classList.remove('opacity-30');
+            }
+
+            // Satuan selalu tampil
+            document.getElementById('box-s1').innerText = d1[2];
+            document.getElementById('box-s2').innerText = d2[2];
+
+            // Reset Kotak Atap Simpan/Pinjam
+            setCarryBorrowStyle('carry-r', 'none');
+            setCarryBorrowStyle('carry-p', 'none');
+            setCarryBorrowStyle('carry-s', 'none');
+
+            // Reset Kotak Input Hasil
+            const rRes = document.getElementById('box-r-res');
+            const pRes = document.getElementById('box-p-res');
+            const sRes = document.getElementById('box-s-res');
+
+            rRes.value = '';
+            pRes.value = '';
+            sRes.value = '';
+
+            rRes.disabled = true;
+            pRes.disabled = true;
+            sRes.disabled = true;
+
+            rRes.placeholder = '?';
+            pRes.placeholder = '?';
+            sRes.placeholder = '?';
+
+            // Reset Desain Gaya Kolom
+            rRes.className = "bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-all duration-300 disabled:opacity-80";
+            pRes.className = "bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-pink-300 transition-all duration-300 disabled:opacity-80";
+            sRes.className = "bg-slate-100 rounded-2xl border-2 border-slate-200 p-4 text-3xl font-extrabold text-center text-slate-400 min-h-[70px] w-full focus:outline-none focus:ring-4 focus:ring-purple-300 transition-all duration-300 disabled:opacity-80";
+
+            removeGlows();
+
+            // Reset Tombol Kendali Langkah
+            const nextBtn = document.getElementById('btn-next-step');
+            nextBtn.className = "w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all text-md flex items-center justify-center gap-2 active:scale-95";
+            nextBtn.innerHTML = "<span>👉 Mulai Isi Kamar Belakang!</span> ➜";
+
+            document.getElementById('step-narrator-text').innerHTML = `"Yuhuu! Kita punya istana angka baru. Ingat sayang, ketuk tombol ungu di bawah untuk mulai mengisi <strong class='text-purple-600 underline'>KAMAR BELAKANG DULU (Satuan)</strong>!"`;
+            document.getElementById('calculator-helper').classList.add('hidden');
+        }
+
+        function removeGlows() {
+            document.getElementById('box-s1').classList.remove('glow-column-violet');
+            document.getElementById('box-s2').classList.remove('glow-column-violet');
+            document.getElementById('box-s-res').classList.remove('glow-column-violet');
+
+            document.getElementById('box-p1').classList.remove('glow-column-pink');
+            document.getElementById('box-p2').classList.remove('glow-column-pink');
+            document.getElementById('box-p-res').classList.remove('glow-column-pink');
+
+            document.getElementById('box-r1').classList.remove('glow-column-cyan');
+            document.getElementById('box-r2').classList.remove('glow-column-cyan');
+            document.getElementById('box-r-res').classList.remove('glow-column-cyan');
+        }
+
+        function resetMathSteps() {
+            generateRandomQuiz();
+        }
+
+        // Dapatkan angka sasaran yang diharapkan per kolom secara akurat
+        function getExpectedDigit(col) {
+            const r1 = Math.floor(mathState.num1 / 100);
+            const p1 = Math.floor((mathState.num1 % 100) / 10);
+            const s1 = mathState.num1 % 10;
+
+            const r2 = Math.floor(mathState.num2 / 100);
+            const p2 = Math.floor((mathState.num2 % 100) / 10);
+            const s2 = mathState.num2 % 10;
+
+            if (mathState.op === 'plus') {
+                if (col === 's') {
+                    return (s1 + s2) % 10;
+                } else if (col === 'p') {
+                    return (p1 + p2 + (mathState.carryP || 0)) % 10;
+                } else if (col === 'r') {
+                    return r1 + r2 + (mathState.carryR || 0);
+                }
+            } else { // minus
+                if (col === 's') {
+                    const tempS1 = s1 < s2 ? (s1 + 10) : s1;
+                    return tempS1 - s2;
+                } else if (col === 'p') {
+                    const p1Real = p1 - (mathState.borrowS ? 1 : 0);
+                    const tempP1 = p1Real < p2 ? (p1Real + 10) : p1Real;
+                    return tempP1 - p2;
+                } else if (col === 'r') {
+                    const r1Real = r1 - (mathState.borrowP ? 1 : 0);
+                    return r1Real - r2;
+                }
+            }
+            return 0;
+        }
+
+        function enableColumn(col) {
+            removeGlows();
+            
+            document.getElementById('box-s-res').disabled = true;
+            document.getElementById('box-p-res').disabled = true;
+            document.getElementById('box-r-res').disabled = true;
+            
+            const r1 = Math.floor(mathState.num1 / 100);
+            const p1 = Math.floor((mathState.num1 % 100) / 10);
+            const s1 = mathState.num1 % 10;
+
+            const r2 = Math.floor(mathState.num2 / 100);
+            const p2 = Math.floor((mathState.num2 % 100) / 10);
+            const s2 = mathState.num2 % 10;
+            
+            if (col === 's') {
+                mathState.currentStep = 1;
+                const inputEl = document.getElementById('box-s-res');
+                inputEl.disabled = false;
+                inputEl.focus();
+                
+                document.getElementById('box-s1').classList.add('glow-column-violet');
+                document.getElementById('box-s2').classList.add('glow-column-violet');
+                inputEl.classList.add('glow-column-violet');
+                
+                // DETEKSI PINJAMAN (BorrowS): Satuan Kurang Dari Satuan Bawah
+                if (mathState.op === 'minus' && s1 < s2) {
+                    mathState.borrowS = true;
+                    setCarryBorrowStyle('carry-p', 'pinjam-kurang', '-1');
+                    setCarryBorrowStyle('carry-s', 'pinjam-tambah', '+10');
+                    
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Satuan: Wah! Angka atas <b>${s1}</b> tidak cukup dikurangi <b>${s2}</b>! 
+                        <br>Kita pinjam 1 puluhan dari Kamar Depan ya, angka satuan sekarang menjadi: <strong class='text-purple-600 font-extrabold text-2xl'>(10 + ${s1}) - ${s2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `(10 + ${s1}) - ${s2} = ?`;
+                } else {
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Satuan: Berapa hasil <b>${s1} ${mathState.op === 'plus' ? 'tambah' : 'kurang'} ${s2}</b>? 
+                        <br>Ketik jawabannya di kotak ungu ya cantik!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `${s1} ${mathState.op === 'plus' ? '+' : '-'} ${s2} = ?`;
+                }
+
+                const nextBtn = document.getElementById('btn-next-step');
+                nextBtn.className = "w-full bg-violet-400 hover:bg-violet-500 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition-all text-sm flex items-center justify-center gap-2 active:scale-95";
+                nextBtn.innerHTML = "<span>💡 Butuh Bantuan? (Tulis Otomatis)</span>";
+                
+            } else if (col === 'p') {
+                mathState.currentStep = 2;
+                const inputEl = document.getElementById('box-p-res');
+                inputEl.disabled = false;
+                inputEl.focus();
+                
+                document.getElementById('box-p1').classList.add('glow-column-pink');
+                document.getElementById('box-p2').classList.add('glow-column-pink');
+                inputEl.classList.add('glow-column-pink');
+
+                // Jika pengurangan dan ada pinjaman sebelumnya, coret visual angka atas
+                const p1Real = p1 - (mathState.borrowS ? 1 : 0);
+                if (mathState.op === 'minus' && mathState.borrowS) {
+                    document.getElementById('box-p1').innerHTML = `<span class="line-through text-slate-300">${p1}</span> <span class="text-red-500 text-3xl font-bold ml-1">${p1Real}</span>`;
+                }
+                
+                // DETEKSI PINJAMAN (BorrowP): Puluhan Kurang dari Puluhan Bawah
+                if (mathState.op === 'minus' && p1Real < p2) {
+                    mathState.borrowP = true;
+                    setCarryBorrowStyle('carry-r', 'pinjam-kurang', '-1');
+                    setCarryBorrowStyle('carry-p', 'pinjam-tambah', '+10'); // Overwrite previous -1 with +10
+                    
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Puluhan: Sisa angka <b>${p1Real}</b> tidak cukup dikurangi <b>${p2}</b>! 
+                        <br>Kita pinjam 1 ratusan dari Kamar Depannya, Kamar Puluhan menjadi: <strong class='text-pink-600 font-extrabold text-2xl'>(10 + ${p1Real}) - ${p2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `(10 + ${p1Real}) - ${p2} = ?`;
+                } 
+                // DETEKSI SIMPANAN (CarryP) dari Penjumlahan Sebelumnya
+                else if (mathState.op === 'plus' && mathState.carryP) {
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Puluhan: Jumlahkan angka puluhan dengan <b>1 (Simpanan)</b> di atapnya ya! 
+                        <br>Hitunglah: <strong class='text-pink-600 font-extrabold text-2xl'>1 + ${p1} + ${p2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `1 + ${p1} + ${p2} = ?`;
+                } 
+                else {
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Puluhan: Sekarang mari isi Kamar Puluhan (Tengah). 
+                        <br>Hitunglah: <strong class='text-pink-600 font-extrabold text-2xl'>${p1Real} ${mathState.op === 'plus' ? 'tambah' : 'kurang'} ${p2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `${p1Real} ${mathState.op === 'plus' ? '+' : '-'} ${p2} = ?`;
+                }
+
+                const nextBtn = document.getElementById('btn-next-step');
+                nextBtn.className = "w-full bg-pink-400 hover:bg-pink-500 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition-all text-sm flex items-center justify-center gap-2 active:scale-95";
+                nextBtn.innerHTML = "<span>💡 Butuh Bantuan? (Tulis Otomatis)</span>";
+                
+            } else if (col === 'r') {
+                mathState.currentStep = 3;
+                const inputEl = document.getElementById('box-r-res');
+                inputEl.disabled = false;
+                inputEl.focus();
+                
+                document.getElementById('box-r1').classList.add('glow-column-cyan');
+                document.getElementById('box-r2').classList.add('glow-column-cyan');
+                inputEl.classList.add('glow-column-cyan');
+
+                const r1Real = r1 - (mathState.borrowP ? 1 : 0);
+                if (mathState.op === 'minus' && mathState.borrowP) {
+                    document.getElementById('box-r1').innerHTML = `<span class="line-through text-slate-300">${r1}</span> <span class="text-red-500 text-3xl font-bold ml-1">${r1Real}</span>`;
+                }
+                
+                // DETEKSI SIMPANAN (CarryR) dari Penjumlahan Sebelumnya
+                if (mathState.op === 'plus' && mathState.carryR) {
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Ratusan: Jumlahkan angka ratusan dengan <b>1 (Simpanan)</b> di atapnya ya! 
+                        <br>Hitunglah: <strong class='text-cyan-600 font-extrabold text-2xl'>1 + ${r1} + ${r2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `1 + ${r1} + ${r2} = ?`;
+                } else {
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "Kamar Ratusan: Satu langkah terakhir sayang! Isi Kamar Ratusan (Depan). 
+                        <br>Hitunglah: <strong class='text-cyan-600 font-extrabold text-2xl'>${r1Real} ${mathState.op === 'plus' ? 'tambah' : 'kurang'} ${r2}</strong>!"
+                    `;
+                    document.getElementById('calculator-helper').classList.remove('hidden');
+                    document.getElementById('calc-formula').innerHTML = `${r1Real} ${mathState.op === 'plus' ? '+' : '-'} ${r2} = ?`;
+                }
+
+                const nextBtn = document.getElementById('btn-next-step');
+                nextBtn.className = "w-full bg-cyan-400 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-2xl shadow-md transition-all text-sm flex items-center justify-center gap-2 active:scale-95";
+                nextBtn.innerHTML = "<span>💡 Butuh Bantuan? (Tulis Otomatis)</span>";
+            }
+        }
+
+        // Memeriksa dan Memvalidasi Input dari Anak secara Mandiri
+        function checkInput(column) {
+            const inputEl = document.getElementById(`box-${column}-res`);
+            let val = inputEl.value.trim();
+            
+            // Hanya izinkan satu digit angka 0-9
+            val = val.replace(/[^0-9]/g, '');
+            inputEl.value = val;
+            
+            if (val === '') return;
+            
+            const expected = getExpectedDigit(column);
+            
+            if (parseInt(val) === expected) {
+                playSuccessSound();
+                inputEl.disabled = true;
+                inputEl.classList.remove('glow-column-violet', 'glow-column-pink', 'glow-column-cyan');
+                
+                if (column === 's') {
+                    inputEl.className = "bg-purple-100 rounded-2xl border-4 border-purple-400 p-4 text-3xl font-extrabold text-purple-700 min-h-[70px] w-full text-center transition-all duration-300";
+                    
+                    // Deteksi Carry ke Puluhan (Penjumlahan)
+                    const s1 = mathState.num1 % 10;
+                    const s2 = mathState.num2 % 10;
+                    if (mathState.op === 'plus' && s1 + s2 >= 10) {
+                        mathState.carryP = 1;
+                        setCarryBorrowStyle('carry-p', 'simpan', '+1');
+                    } else {
+                        // Bersihkan atap pinjaman jika sebelumnya dipakai untuk pengurangan
+                        setCarryBorrowStyle('carry-p', 'none');
+                        setCarryBorrowStyle('carry-s', 'none');
+                    }
+                    
+                    enableColumn('p');
+                } else if (column === 'p') {
+                    inputEl.className = "bg-pink-100 rounded-2xl border-4 border-pink-400 p-4 text-3xl font-extrabold text-pink-700 min-h-[70px] w-full text-center transition-all duration-300";
+                    
+                    // Deteksi Carry ke Ratusan (Penjumlahan)
+                    const p1 = Math.floor((mathState.num1 % 100) / 10);
+                    const p2 = Math.floor((mathState.num2 % 100) / 10);
+                    if (mathState.op === 'plus' && p1 + p2 + mathState.carryP >= 10) {
+                        mathState.carryR = 1;
+                        setCarryBorrowStyle('carry-r', 'simpan', '+1');
+                    } else {
+                        setCarryBorrowStyle('carry-r', 'none');
+                    }
+
+                    if (mathState.maxSteps === 2) {
+                        finishMathQuiz();
+                    } else {
+                        enableColumn('r');
+                    }
+                } else if (column === 'r') {
+                    inputEl.className = "bg-cyan-100 rounded-2xl border-4 border-cyan-400 p-4 text-3xl font-extrabold text-cyan-700 min-h-[70px] w-full text-center transition-all duration-300";
+                    finishMathQuiz();
+                }
+            } else {
+                // Jawaban salah: Bunyi "Tetot" + Getar Merah + Reset Input
+                playWarningSound();
+                inputEl.classList.add('shake-input');
+                setTimeout(() => {
+                    inputEl.classList.remove('shake-input');
+                }, 400);
+                inputEl.value = ''; // Kosongkan agar bisa dicoba kembali
+                
+                const s1 = mathState.num1 % 10;
+                const p1 = Math.floor((mathState.num1 % 100) / 10);
+                const r1 = Math.floor(mathState.num1 / 100);
+
+                const s2 = mathState.num2 % 10;
+                const p2 = Math.floor((mathState.num2 % 100) / 10);
+                const r2 = Math.floor(mathState.num2 / 100);
+
+                if (column === 's') {
+                    const mathS1 = s1 < s2 && mathState.op === 'minus' ? (s1 + 10) : s1;
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "❌ <b>Aduh sayang, coba dihitung sekali lagi ya cantik!</b> 
+                        <br>Berapakah hasil dari <strong class='text-red-500 font-extrabold text-2xl'>${mathS1} ${mathState.op === 'plus' ? '+' : '-'} ${s2}</strong>? Kamu pasti bisa!"
+                    `;
+                } else if (column === 'p') {
+                    const p1Real = p1 - (mathState.borrowS ? 1 : 0);
+                    const mathP1 = p1Real < p2 && mathState.op === 'minus' ? (p1Real + 10) : p1Real;
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "❌ <b>Jawaban kurang tepat!</b> 
+                        <br>Berapakah hasil dari <strong class='text-red-500 font-extrabold text-2xl'>${mathP1} ${mathState.op === 'plus' ? '+' : '-'} ${p2}</strong>${mathState.carryP && mathState.op === 'plus' ? ' (jangan lupa tambahkan simpanan 1)' : ''}? Coba lagi sayang!"
+                    `;
+                } else if (column === 'r') {
+                    const r1Real = r1 - (mathState.borrowP ? 1 : 0);
+                    document.getElementById('step-narrator-text').innerHTML = `
+                        "❌ <b>Ayo sedikit lagi istana angka selesai!</b> 
+                        <br>Berapakah hasil dari <strong class='text-red-500 font-extrabold text-2xl'>${r1Real} ${mathState.op === 'plus' ? '+' : '-'} ${r2}</strong>${mathState.carryR && mathState.op === 'plus' ? ' (jangan lupa tambahkan simpanan 1)' : ''}?"
+                    `;
+                }
+            }
+        }
+
+        function finishMathQuiz() {
+            playSuccessSound();
+            removeGlows();
+            mathState.currentStep = 4;
+            
+            // Sembunyikan semua carry/borrow atap saat selesai
+            setCarryBorrowStyle('carry-r', 'none');
+            setCarryBorrowStyle('carry-p', 'none');
+            setCarryBorrowStyle('carry-s', 'none');
+            
+            const finalResult = mathState.op === 'plus' ? (mathState.num1 + mathState.num2) : (mathState.num1 - mathState.num2);
+            
+            document.getElementById('step-narrator-text').innerHTML = `
+                "🎉 HOREEE! HEBAT SEKALI! 🎉
+                <br>Istana angka diselesaikan dengan sempurna! Hasil akhirnya adalah <strong class='text-pink-600 font-extrabold text-4xl'>${finalResult}</strong>! 
+                Kamu sungguh anak luar biasa cerdas, sayang!"
+            `;
+            document.getElementById('calculator-helper').classList.add('hidden');
+            
+            const nextBtn = document.getElementById('btn-next-step');
+            nextBtn.className = "w-full bg-gradient-to-r from-pink-500 to-violet-500 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all text-md flex items-center justify-center gap-2 active:scale-95";
+            nextBtn.innerHTML = "<span>Ayo Main Lagi (Acak Baru)!</span> 🔄";
+        }
+
+        function advanceStep() {
+            if (mathState.currentStep === 0) {
+                enableColumn('s');
+            } else if (mathState.currentStep === 4) {
+                generateRandomQuiz();
+            } else {
+                // Tulis otomatis jawaban yang benar jika anak meminta tutorial/bantuan
+                let activeCol = '';
+                if (mathState.currentStep === 1) activeCol = 's';
+                else if (mathState.currentStep === 2) activeCol = 'p';
+                else if (mathState.currentStep === 3) activeCol = 'r';
+                
+                if (!activeCol) return;
+                
+                const expected = getExpectedDigit(activeCol);
+                const inputEl = document.getElementById(`box-${activeCol}-res`);
+                inputEl.value = expected;
+                checkInput(activeCol);
+            }
+        }
+
+
+        // INISIALISASI GAME
+        window.addEventListener('load', () => {
+            initFrogTrackOptions();
+            generateLilyPads();
+            updateFrogPosition(false);
+            
+            // Set kategori bawaan dan acak kuis baru
+            setGameCategory('puluhan-puluhan');
+            setGameOperator('plus');
+        });
+
+        window.addEventListener('resize', () => {
+            updateFrogPosition(false);
+        });
+    </script>
+</body>
+</html>
