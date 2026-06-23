@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matematika Interaktif Kelas 3 SD - Penjumlahan & Pengurangan</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="family">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+    }
+    .font-header {
+      font-family: 'Fredoka', sans-serif;
+    }
+    /* Custom scrollbar for friendly look */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-indigo-50 text-slate-800 min-h-screen flex flex-col selection:bg-amber-200">
+
+  <!-- Header / Navbar -->
+  <header class="bg-indigo-900 text-white shadow-md py-3 px-4 md:px-6 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="bg-amber-400 p-2 rounded-full text-indigo-950 animate-bounce">
+          <i data-lucide="calculator" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-header text-xl md:text-2xl tracking-wide text-amber-300">Dunia Matematika</h1>
+          <p class="text-xs text-indigo-200 font-semibold">Kurikulum Merdeka • Kelas 3 SD</p>
+        </div>
+      </div>
+
+      <!-- Mode Selector Tabs -->
+      <div class="flex bg-indigo-950 p-1 rounded-full border border-indigo-700 w-full sm:w-auto">
+        <button onclick="switchTab('presentation')" id="tab-presentation" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all bg-amber-400 text-indigo-950">
+          <i data-lucide="presentation" class="w-4 h-4"></i> Presentasi
+        </button>
+        <button onclick="switchTab('simulators')" id="tab-simulators" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all text-indigo-200 hover:text-white">
+          <i data-lucide="cpu" class="w-4 h-4"></i> Alat Bantu / Simulator
+        </button>
+        <button onclick="switchTab('scratchpad')" id="tab-scratchpad" class="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all text-indigo-200 hover:text-white">
+          <i data-lucide="pencil" class="w-4 h-4"></i> Papan Cakar
+        </button>
+      </div>
+
+      <!-- Scoreboard / Stars -->
+      <div class="flex items-center gap-3 bg-indigo-950 px-4 py-1.5 rounded-full border border-indigo-700 shrink-0">
+        <span class="text-sm font-bold text-amber-300 flex items-center gap-1">
+          <i data-lucide="star" class="w-4 h-4 fill-amber-300 text-amber-300"></i>
+          <span id="star-count">0</span> Bintang
+        </span>
+        <div class="w-px h-4 bg-indigo-700"></div>
+        <button onclick="resetStars()" class="text-xs text-indigo-300 hover:text-red-400 font-bold transition">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Work Area -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-6 flex flex-col gap-6">
+
+    <!-- TAB 1: PRESENTATION (SLIDE DECK & INTERACTIVES) -->
+    <div id="section-presentation" class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      
+      <!-- Slide Sidebar / Navigation List -->
+      <div class="bg-white rounded-3xl p-4 shadow-lg border-2 border-indigo-100 flex flex-col h-[calc(100vh-14rem)] lg:h-[680px]">
+        <h3 class="font-header text-lg text-indigo-950 mb-3 flex items-center gap-2">
+          <i data-lucide="book-open" class="w-5 h-5 text-indigo-600"></i> Daftar Isi Materi
+        </h3>
+        <!-- Scrollable Slide Index -->
+        <div class="flex-1 overflow-y-auto space-y-1.5 pr-1" id="slide-index-list">
+          <!-- Dynamically filled with JavaScript -->
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+            <span>Kemajuan Belajar</span>
+            <span id="progress-text">0/35 Selesai</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="progress-bar-fill" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide Main Area -->
+      <div class="lg:col-span-3 flex flex-col gap-4">
+        <!-- Interactive Slide Container -->
+        <div id="slide-card" class="bg-white rounded-[32px] p-5 md:p-8 shadow-xl border-4 transition-all duration-500 min-h-[500px] lg:h-[580px] flex flex-col justify-between relative overflow-hidden">
+          
+          <!-- Decorative Background Elements (Generated Dynamically or Styles Applied dynamically) -->
+          <div class="absolute top-0 left-0 w-32 h-32 rounded-full opacity-10 pointer-events-none -translate-x-12 -translate-y-12 bg-indigo-500" id="decor-bubble-1"></div>
+          <div class="absolute bottom-0 right-0 w-48 h-48 rounded-full opacity-10 pointer-events-none translate-x-16 translate-y-16 bg-pink-500" id="decor-bubble-2"></div>
+          
+          <!-- Slide Header Info -->
+          <div class="flex items-center justify-between z-10">
+            <span id="slide-category-badge" class="px-4 py-1 rounded-full text-xs font-extrabold tracking-wide uppercase shadow-sm">
+              MATERI UTAMA
+            </span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs bg-slate-100 px-3 py-1.5 rounded-full font-bold text-slate-500" id="slide-num-indicator">
+                Slide 1 / 35
+              </span>
+            </div>
+          </div>
+
+          <!-- Slide Core Content (Interacts dynamically) -->
+          <div class="flex-1 flex flex-col justify-center items-center py-6 z-10 text-center" id="slide-content-zone">
+            <!-- Dynamically Rendered by JS based on current Slide Index -->
+          </div>
+
+          <!-- Slide Control Panel -->
+          <div class="border-t-2 border-dashed border-slate-100 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 z-10">
+            <!-- Audio Help Placeholder / Text to speech button -->
+            <button onclick="readSlideText()" class="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-bold text-sm bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-full transition">
+              <i data-lucide="volume-2" class="w-4 h-4"></i> Suara Guru
+            </button>
+
+            <!-- Navigation Buttons -->
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <button onclick="prevSlide()" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold px-6 py-3 rounded-2xl transition shadow-sm active:scale-95">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i> Kembali
+              </button>
+              <button onclick="nextSlide()" id="btn-next-slide" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-500 text-indigo-950 font-extrabold px-8 py-3 rounded-2xl transition shadow-md active:scale-95">
+                Lanjut <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Instructor Notes Display -->
+        <div class="bg-indigo-900/10 border border-indigo-200 rounded-2xl p-4 flex items-start gap-3">
+          <span class="bg-indigo-600 text-white p-2 rounded-xl shrink-0">
+            <i data-lucide="lightbulb" class="w-5 h-5"></i>
+          </span>
+          <div>
+            <h4 class="font-bold text-indigo-950 text-sm">Catatan Guru & Tips:</h4>
+            <p class="text-xs text-indigo-900 mt-1" id="slide-instructor-notes">
+              Kenalkan topik dengan antusias kepada siswa. Gunakan animasi untuk mempermudah pemahaman.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- TAB 2: INTERACTIVE SIMULATORS (ALAT BANTU) -->
+    <div id="section-simulators" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Simulator 1: Place Value Block Interactive (Blok Nilai Tempat) -->
+      <div class="bg-white rounded-3xl p-5 shadow-lg border-2 border-indigo-100 md:col-span-1 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="bg-purple-100 text-purple-600 p-2 rounded-2xl">
+              <i data-lucide="home" class="w-6 h-6"></i>
+            </span>
+            <div>
+              <h3 class="font-header text-lg text-slate-900">Blok Nilai Tempat</h3>
+              <p class="text-xs text-slate-500">Visualisasi Ratusan, Puluhan, Satuan</p>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Ketik Angka (0-999):</label>
+              <input type="number" id="place-value-input" value="253" min="0" max="999" oninput="drawPlaceValueBlocks()" class="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-bold text-center text-xl">
+            </div>
+
+            <!-- Block Display Area -->
+            <div class="border-2 border-dashed border-slate-100 rounded-2xl p-3 bg-slate-50 space-y-4 min-h-[220px] max-h-[300px] overflow-y-auto">
+              <!-- Ratusan -->
+              <div>
+                <span class="text-xs font-extrabold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Ratusan (R)</span>
+                <div id="block-container-ratusan" class="flex flex-wrap gap-1 mt-1"></div>
+              </div>
+              <!-- Puluhan -->
+              <div>
+                <span class="text-xs font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Puluhan (P)</span>
+                <div id="block-container-puluhan" class="flex flex-wrap gap-1 mt-1"></div>
+              </div>
+              <!-- Satuan -->
+              <div>
+                <span class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Satuan (S)</span>
+                <div id="block-container-satuan" class="flex flex-wrap gap-1 mt-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 mt-4 text-center">Setiap kotak besar = 100, baris = 10, kotak kecil = 1.</p>
+      </div>
+
+
+      <!-- Simulator 2 & 3: Bersusun Pintar Solver (Addition & Subtraction Steps Visualizer) -->
+      <div class="bg-white rounded-3xl p-6 shadow-lg border-2 border-indigo-100 md:col-span-2 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <span class="bg-amber-100 text-amber-600 p-2 rounded-2xl">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+              </span>
+              <div>
+                <h3 class="font-header text-lg text-slate-900">Simulator Bersusun Pintar</h3>
+                <p class="text-xs text-slate-500">Melihat detail proses Penyimpanan / Peminjaman</p>
+              </div>
+            </div>
+
+            <!-- Math Operation Toggle -->
+            <div class="flex bg-slate-100 p-1 rounded-xl">
+              <button onclick="setSimOperation('add')" id="sim-op-add" class="bg-white text-indigo-950 px-3 py-1 rounded-lg text-xs font-bold shadow-sm transition">Penjumlahan (+)</button>
+              <button onclick="setSimOperation('sub')" id="sim-op-sub" class="text-slate-500 hover:text-slate-900 px-3 py-1 rounded-lg text-xs font-bold transition">Pengurangan (-)</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+            
+            <!-- Inputs & Static Display -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 flex flex-col justify-center items-center space-y-4">
+              <div class="flex items-center gap-4 justify-center">
+                <div class="text-center">
+                  <label class="block text-xs font-bold text-slate-500 mb-1">Angka Atas</label>
+                  <input type="number" id="sim-num-1" value="375" min="0" max="999" oninput="calculateSim()" class="w-24 px-3 py-2 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-bold text-center text-lg">
+                </div>
+                <span class="text-2xl font-bold mt-4" id="sim-operator-sign">+</span>
+                <div class="text-center">
+                  <label class="block text-xs font-bold text-slate-500 mb-1">Angka Bawah</label>
+                  <input type="number" id="sim-num-2" value="248" min="0" max="999" oninput="calculateSim()" class="w-24 px-3 py-2 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-bold text-center text-lg">
+                </div>
+              </div>
+
+              <!-- Animated Column Display -->
+              <div class="p-4 bg-white rounded-xl border border-slate-200 w-full max-w-[200px] shadow-inner font-mono text-2xl font-bold flex flex-col items-end space-y-2 relative" id="sim-column-render">
+                <!-- Column numbers rendered dynamically in JS to show carried/borrowed values clearly -->
+              </div>
+            </div>
+
+            <!-- Process step-by-step description -->
+            <div class="flex flex-col justify-between">
+              <div class="space-y-3">
+                <h4 class="font-bold text-sm text-indigo-900 flex items-center gap-1.5">
+                  <i data-lucide="help-circle" class="w-4 h-4 text-indigo-600"></i> Cara Mengerjakan:
+                </h4>
+                <div id="sim-steps-container" class="space-y-2 max-h-[220px] overflow-y-auto pr-1">
+                  <!-- Steps injected here dynamically -->
+                </div>
+              </div>
+
+              <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-800 text-xs font-bold mt-4 flex items-center gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Kamu bisa mencoba angka apa saja di atas untuk belajar!</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- TAB 3: SCRATCHPAD (PAPAN CAKAR / MENGGAMBAR) -->
+    <div id="section-scratchpad" class="hidden flex-col gap-4">
+      <div class="bg-white rounded-3xl p-5 shadow-lg border-2 border-indigo-100">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+          <div>
+            <h3 class="font-header text-lg text-slate-900 flex items-center gap-2">
+              <i data-lucide="pencil" class="w-5 h-5 text-indigo-600"></i> Papan Cakar / Coreti Layar
+            </h3>
+            <p class="text-xs text-slate-500">Gunakan jarimu atau mouse untuk menghitung coret-coretan di bawah ini!</p>
+          </div>
+
+          <!-- Canvas Controls -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+              <button onclick="setPenColor('#1e293b')" class="w-6 h-6 rounded-full bg-slate-800 focus:ring-2 focus:ring-offset-2 focus:ring-slate-400"></button>
+              <button onclick="setPenColor('#2563eb')" class="w-6 h-6 rounded-full bg-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"></button>
+              <button onclick="setPenColor('#dc2626')" class="w-6 h-6 rounded-full bg-red-600 focus:ring-2 focus:ring-offset-2 focus:ring-red-400"></button>
+              <button onclick="setPenColor('#16a34a')" class="w-6 h-6 rounded-full bg-emerald-600 focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400"></button>
+            </div>
+            
+            <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+              <button onclick="setPenWidth(3)" id="pen-size-thin" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-white shadow-sm">Tipis</button>
+              <button onclick="setPenWidth(7)" id="pen-size-thick" class="px-2.5 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800">Tebal</button>
+            </div>
+
+            <button onclick="clearCanvas()" class="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded-xl transition">
+              <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Semua
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="border-4 border-dashed border-slate-200 rounded-2xl overflow-hidden bg-slate-50 relative h-[400px]">
+          <canvas id="scratch-canvas" class="w-full h-full block cursor-crosshair"></canvas>
+          <div class="absolute bottom-3 right-3 text-[10px] text-slate-400 font-bold bg-white/80 px-2 py-1 rounded-md pointer-events-none">
+            Gunakan mouse / layar sentuh
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Global Sound Playback Synth -->
+  <script>
+    // Audio Context Setup for rewarding Beeps and Cheers
+    let audioCtx = null;
+    function playBeep(type) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'success') {
+          // Double cheery beep
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.35);
+        } else if (type === 'click') {
+          // Soft bubble tap
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(329.63, audioCtx.currentTime); // E4
+          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === 'wrong') {
+          // Low flat buzz
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.3);
+        }
+      } catch (e) {
+        console.log("Audio feedback error or not supported: ", e);
+      }
+    }
+  </script>
+
+  <!-- Javascript Core Logic for Slides, Workspaces, and Simulators -->
+  <script>
+    // Current State
+    let currentSlide = 0;
+    let starsEarned = parseInt(localStorage.getItem('math_sd3_stars') || '0');
+    let answeredQuestions = JSON.parse(localStorage.getItem('math_sd3_answered') || '{}');
+    let completedSlides = JSON.parse(localStorage.getItem('math_sd3_completed') || '[]');
+
+    // Setup Stars indicator on load
+    document.getElementById('star-count').innerText = starsEarned;
+
+    // Slide database mapped directly from math_pptx.js layout
+    const slidesData = [
+      // Slide 1: Cover
+      {
+        id: 1,
+        category: "Pembuka",
+        title: "Penjumlahan & Pengurangan",
+        notes: "Slide pembuka. Kenalkan topik dengan antusias kepada siswa.",
+        bgClass: "from-indigo-900 to-indigo-950 text-white",
+        render: () => `
+          <div class="flex flex-col items-center justify-center space-y-6 max-w-2xl">
+            <div class="bg-orange-500 text-white font-header text-sm md:text-base px-6 py-2 rounded-2xl shadow-lg border-2 border-orange-400 rotate-[-2deg] tracking-wider animate-pulse">
+              MATEMATIKA KELAS 3 SD
+            </div>
+            <div class="bg-lime-500 text-indigo-950 font-header text-xs md:text-sm px-4 py-1 rounded-full font-bold shadow-md">
+              Kurikulum Merdeka
+            </div>
+            <div class="space-y-1">
+              <h1 class="font-header text-4xl md:text-6xl text-amber-300 drop-shadow-md">Penjumlahan</h1>
+              <p class="text-2xl font-bold font-header text-indigo-200">&</p>
+              <h1 class="font-header text-4xl md:text-6xl text-orange-500 drop-shadow-md">Pengurangan</h1>
+            </div>
+            <div class="text-3xl text-amber-200 font-bold bg-white/10 px-6 py-2 rounded-full border border-white/20">
+              ➕  ➖  =  ×
+            </div>
+            <p class="text-sm text-indigo-200 font-semibold italic">Ayo kita belajar berhitung dengan menyenangkan! 🚀</p>
+          </div>
+        `
+      },
+      // Slide 2: Daftar Isi
+      {
+        id: 2,
+        category: "Materi",
+        title: "📚 Apa yang Akan Kita Pelajari?",
+        notes: "Gunakan halaman daftar isi ini untuk memberikan peta materi kepada anak-anak agar mereka tahu jalan belajar mereka.",
+        bgClass: "from-slate-50 to-indigo-50",
+        render: () => {
+          const topics = [
+            { num: "1", title: "Strategi Berhitung Cepat", color: "bg-orange-500", desc: "Maju/Mundur & Pecah Angka" },
+            { num: "2", title: "Puluhan + Satuan", color: "bg-emerald-500", desc: "Dengan & Tanpa Menyimpan" },
+            { num: "3", title: "Puluhan + Puluhan", color: "bg-blue-500", desc: "Konsep dasar bersusun ke bawah" },
+            { num: "4", title: "Ratusan + Ratusan", color: "bg-purple-500", desc: "Nilai tempat ratusan & menyimpan" },
+            { num: "5", title: "Pengurangan Bersusun", color: "bg-red-500", desc: "Konsep meminjam dari puluhan" },
+            { num: "6", title: "Latihan & Soal Cerita", color: "bg-pink-500", desc: "Tantangan logika dalam cerita" }
+          ];
+          return `
+            <div class="w-full max-w-3xl">
+              <h2 class="font-header text-2xl text-indigo-950 mb-6">Peta Petualangan Belajar Kita 🗺️</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                ${topics.map((t, idx) => `
+                  <div onclick="jumpToSlide(${[3, 8, 12, 16, 19, 25][idx]})" class="bg-white p-3.5 rounded-2xl border-2 border-slate-100 hover:border-indigo-400 hover:shadow-md cursor-pointer transition flex items-center gap-4 text-left">
+                    <span class="${t.color} text-white w-10 h-10 rounded-full flex items-center justify-center font-header text-lg shrink-0">
+                      ${t.num}
+                    </span>
+                    <div>
+                      <h4 class="font-bold text-slate-800 text-sm leading-snug">${t.title}</h4>
+                      <p class="text-xs text-slate-400">${t.desc}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+      },
+      // Slide 3: Strategi Intro
+      {
+        id: 3,
+        category: "Strategi",
+        title: "🧠 Strategi Berhitung",
+        notes: "Sebelum belajar bersusun, latih cara berpikir kreatif anak-anak dalam memanipulasi angka agar terbiasa berhitung di luar kepala.",
+        bgClass: "from-orange-50 to-amber-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-orange-950 mb-3">Sebelum belajar bersusun, kenali cara cepat berhitung! 🚀</h2>
+            <p class="text-slate-600 text-sm mb-6">Matematika itu fleksibel! Kita bisa menggunakan banyak cara kreatif:</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div class="bg-white p-5 rounded-2xl shadow-sm border border-orange-100 flex flex-col justify-between">
+                <span class="text-3xl mb-2">🔢</span>
+                <h4 class="font-header text-base text-orange-600 mb-2">Menghitung Maju</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">Mulai dari angka terbesar, hitung maju.<br><strong class="bg-amber-100 px-1 rounded">Contoh: 45 + 3</strong><br>→ Tahan 45, maju: 46, 47, <span class="text-orange-600 font-bold">48 ✓</span></p>
+              </div>
+              <div class="bg-white p-5 rounded-2xl shadow-sm border border-blue-100 flex flex-col justify-between">
+                <span class="text-3xl mb-2">⬅️</span>
+                <h4 class="font-header text-base text-blue-600 mb-2">Menghitung Mundur</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">Mulai dari angka terbesar, hitung mundur.<br><strong class="bg-blue-50 px-1 rounded">Contoh: 48 − 3</strong><br>→ Tahan 48, mundur: 47, 46, <span class="text-blue-600 font-bold">45 ✓</span></p>
+              </div>
+              <div class="bg-white p-5 rounded-2xl shadow-sm border border-emerald-100 flex flex-col justify-between">
+                <span class="text-3xl mb-2">🔟</span>
+                <h4 class="font-header text-base text-emerald-600 mb-2">Melompat Puluhan</h4>
+                <p class="text-xs text-slate-600 leading-relaxed">Tambahkan atau kurangi per 10.<br><strong class="bg-emerald-50 px-1 rounded">Contoh: 35 + 20</strong><br>→ 35 + 10 = 45<br>→ 45 + 10 = <span class="text-emerald-600 font-bold">55 ✓</span></p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 4: Strategi Bilangan Referensi (Pembulatan)
+      {
+        id: 4,
+        category: "Strategi",
+        title: "💡 Strategi: Bilangan Referensi (Pembulatan)",
+        notes: "Membulatkan ke angka puluhan terdekat (seperti 30 atau 20) membuat kalkulasi mental jadi sangat mudah.",
+        bgClass: "from-emerald-50 to-teal-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-teal-950 mb-2">Bulatkan ke puluhan terdekat, lalu sesuaikan hasilnya!</h2>
+            <p class="text-slate-600 text-xs mb-6 italic">Sangat berguna jika salah satu angka mendekati kelipatan 10 (misal berakhir dengan angka 8 atau 9)</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Contoh Penjumlahan -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
+                <span class="absolute top-2 right-4 text-emerald-100 font-bold text-4xl font-header">+</span>
+                <h4 class="font-bold text-emerald-700 text-sm mb-3">CONTOH PENJUMLAHAN</h4>
+                <div class="space-y-2 text-left font-mono text-slate-700">
+                  <p class="text-xl font-bold">38 + 29 = ...?</p>
+                  <p class="text-xs bg-slate-50 p-2 rounded-lg">💡 <span class="font-sans">Kita bulatkan 29 menjadi 30 (lebih mudah ditambah!)</span></p>
+                  <div class="pl-4 border-l-2 border-emerald-300 space-y-1 text-sm">
+                    <p>38 + 30 = 68</p>
+                    <p>Karena tadi kita pinjam +1 (agar jadi 30), sekarang kita kurangi 1:</p>
+                    <p>68 − 1 = <strong class="text-emerald-600 text-lg">67 ✓</strong></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contoh Pengurangan -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-red-100 shadow-sm relative overflow-hidden">
+                <span class="absolute top-2 right-4 text-red-100 font-bold text-4xl font-header">−</span>
+                <h4 class="font-bold text-red-700 text-sm mb-3">CONTOH PENGURANGAN</h4>
+                <div class="space-y-2 text-left font-mono text-slate-700">
+                  <p class="text-xl font-bold">52 − 19 = ...?</p>
+                  <p class="text-xs bg-slate-50 p-2 rounded-lg">💡 <span class="font-sans">Bulatkan 19 menjadi 20 (lebih mudah dikurang!)</span></p>
+                  <div class="pl-4 border-l-2 border-red-300 space-y-1 text-sm">
+                    <p>52 − 20 = 32</p>
+                    <p>Karena kita mengurangi terlalu banyak (-1), sekarang kita tambahkan kembali 1:</p>
+                    <p>32 + 1 = <strong class="text-emerald-600 text-lg">33 ✓</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 5: Strategi Memecah Angka
+      {
+        id: 5,
+        category: "Strategi",
+        title: "✂️ Strategi: Memecah Angka (Dekomposisi)",
+        notes: "Memecah angka ke dalam satuan dan puluhan memberikan dasar intuisi matematika bersusun ke bawah.",
+        bgClass: "from-purple-50 to-indigo-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-indigo-950 mb-1">Pisahkan angka menjadi puluhan dan satuan!</h2>
+            <p class="text-slate-500 text-xs mb-6">Metode ini membuat angka rumit menjadi sederhana</p>
+
+            <div class="bg-white p-5 rounded-3xl border-2 border-indigo-100 shadow-sm">
+              <div class="text-center mb-4">
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase">Kalkulasi Mandiri</span>
+                <h3 class="font-header text-2xl text-indigo-950 mt-1.5">Contoh: 43 + 25</h3>
+              </div>
+
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                <div class="bg-purple-50 p-3 rounded-2xl border border-purple-100">
+                  <span class="text-xs font-bold text-purple-700">Langkah 1</span>
+                  <p class="text-xs text-slate-600 mt-1">Pecah Angka:<br><strong>43 = 40 + 3</strong><br><strong>25 = 20 + 5</strong></p>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+                  <span class="text-xs font-bold text-blue-700">Langkah 2</span>
+                  <p class="text-xs text-slate-600 mt-1">Jumlah Puluhan:<br><strong>40 + 20 = 60</strong></p>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-100">
+                  <span class="text-xs font-bold text-emerald-700">Langkah 3</span>
+                  <p class="text-xs text-slate-600 mt-1">Jumlah Satuan:<br><strong>3 + 5 = 8</strong></p>
+                </div>
+                <div class="bg-orange-50 p-3 rounded-2xl border border-orange-100">
+                  <span class="text-xs font-bold text-orange-700">Langkah 4</span>
+                  <p class="text-xs text-slate-600 mt-1">Gabungkan:<br><strong>60 + 8 = 68 ✓</strong></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 6: Konsep Nilai Tempat
+      {
+        id: 6,
+        category: "Nilai Tempat",
+        title: "🏠 Nilai Tempat: Ratusan, Puluhan, Satuan",
+        notes: "Minta siswa untuk bereksplorasi dengan mengetikkan angka lain ke Simulator Blok di tab Simulator jika kesulitan melihat pembagian ini.",
+        bgClass: "from-blue-50 to-indigo-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-indigo-950 mb-2">Setiap angka memiliki rumahnya masing-masing!</h2>
+            <p class="text-slate-600 text-xs mb-6">Memahami Nilai Tempat mempermudah kita saat melakukan penghitungan bersusun ke bawah.</p>
+
+            <div class="text-center mb-4">
+              <p class="text-lg font-bold text-slate-700">Angka <span class="bg-yellow-200 px-2 py-0.5 rounded text-xl">253</span> terdiri dari:</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+              <!-- Ratusan -->
+              <div class="bg-white p-4 rounded-3xl border-2 border-purple-200 shadow-sm text-center relative overflow-hidden">
+                <span class="absolute top-0 right-0 bg-purple-500 text-white font-bold text-xs px-2.5 py-1 rounded-bl-xl">R</span>
+                <h4 class="font-header text-sm text-purple-600">RATUSAN</h4>
+                <p class="font-header text-5xl md:text-6xl text-purple-600 my-2">2</p>
+                <p class="text-xs text-slate-400 font-bold">= 200</p>
+              </div>
+
+              <!-- Puluhan -->
+              <div class="bg-white p-4 rounded-3xl border-2 border-blue-200 shadow-sm text-center relative overflow-hidden">
+                <span class="absolute top-0 right-0 bg-blue-500 text-white font-bold text-xs px-2.5 py-1 rounded-bl-xl">P</span>
+                <h4 class="font-header text-sm text-blue-600">PULUHAN</h4>
+                <p class="font-header text-5xl md:text-6xl text-blue-600 my-2">5</p>
+                <p class="text-xs text-slate-400 font-bold">= 50</p>
+              </div>
+
+              <!-- Satuan -->
+              <div class="bg-white p-4 rounded-3xl border-2 border-emerald-200 shadow-sm text-center relative overflow-hidden">
+                <span class="absolute top-0 right-0 bg-emerald-500 text-white font-bold text-xs px-2.5 py-1 rounded-bl-xl">S</span>
+                <h4 class="font-header text-sm text-emerald-600">SATUAN</h4>
+                <p class="font-header text-5xl md:text-6xl text-emerald-600 my-2">3</p>
+                <p class="text-xs text-slate-400 font-bold">= 3</p>
+              </div>
+            </div>
+
+            <div class="text-center mt-5">
+              <span class="font-mono text-lg font-extrabold text-indigo-800 bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-xl">253 = 200 + 50 + 3</span>
+            </div>
+          </div>
+        `
+      },
+      // Slide 7: Penjumlahan Bersusun Intro
+      {
+        id: 7,
+        category: "Penjumlahan",
+        title: "➕ Cara Bersusun: Langkah demi Langkah",
+        notes: "Tekankan pentingnya kerapihan dalam penulisan angka agar posisi kolom sejajar tegak lurus.",
+        bgClass: "from-amber-50 to-orange-50",
+        render: () => `
+          <div class="w-full max-w-4xl text-left">
+            <h2 class="font-header text-2xl text-slate-900 mb-2 text-center">Tulis angka ke bawah lalu hitung per kolom!</h2>
+            <p class="text-slate-600 text-xs mb-6 text-center">Aturan emas yang wajib kamu ingat baik-baik:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-2xl border border-amber-100 flex gap-3">
+                <span class="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">1</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Sejajarkan Posisi</h4>
+                  <p class="text-xs text-slate-500 mt-1">Tulis angka lurus: Satuan di bawah satuan, puluhan di bawah puluhan.</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100 flex gap-3">
+                <span class="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">2</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Mulai dari Kanan</h4>
+                  <p class="text-xs text-slate-500 mt-1">Hitung selalu dari kolom paling kanan (SATUAN) ke kiri.</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100 flex gap-3">
+                <span class="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">3</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Konsep Menyimpan</h4>
+                  <p class="text-xs text-slate-500 mt-1">Jika hasil suatu kolom ≥ 10, simpan puluhan ke kolom berikutnya.</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100 flex gap-3">
+                <span class="bg-amber-100 text-amber-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">4</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Jangan Lupa Simpanan</h4>
+                  <p class="text-xs text-slate-500 mt-1">Saat menghitung kolom berikutnya, tambahkan juga angka simpanan tadi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 8: Penjumlahan Puluhan + Satuan (Tanpa Simpan)
+      {
+        id: 8,
+        category: "Penjumlahan",
+        title: "➕ Puluhan + Satuan (Tanpa Simpan)",
+        notes: "Materi ini adalah pondasi paling dasar. Pastikan siswa memahami letak satuan lurus dengan satuan di bawahnya.",
+        bgClass: "from-emerald-50 to-teal-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-emerald-950 mb-4 text-center">Contoh Kasus: 35 + 4 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm flex flex-col items-center">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-2 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Math columns -->
+                <div class="font-mono text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">3</span><span class="text-emerald-500">5</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-slate-300"> </span><span class="text-emerald-500">4</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>3</span><span>9</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah Penyelesaian:</h4>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Kolom Satuan (S):</strong><br>5 + 4 = <strong class="text-emerald-600">9</strong>. Tulis 9 di kolom satuan.
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Kolom Puluhan (P):</strong><br>3 + 0 = <strong class="text-blue-600">3</strong>. Tulis 3 di kolom puluhan.
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100 text-xs font-bold text-emerald-800 text-center">
+                  Hasil Akhir: 39 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 9: Penjumlahan Puluhan + Satuan (Dengan Simpan)
+      {
+        id: 9,
+        category: "Penjumlahan",
+        title: "➕ Puluhan + Satuan (Dengan Simpan)",
+        notes: "Inilah titik krusial. Ajarkan anak bahwa angka puluhan dari hasil penjumlahan satuan tidak boleh ditulis di bawah, melainkan diletakkan di atas kolom puluhan.",
+        bgClass: "from-blue-50 to-indigo-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-indigo-950 mb-4 text-center">Contoh Kasus: 47 + 8 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col items-center">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-1 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Carried indicator -->
+                <div class="flex justify-end w-36 pr-4 mb-1">
+                  <span class="w-8"></span>
+                  <span class="w-8 h-6 w-6 rounded-full bg-red-500 text-white font-bold text-xs flex items-center justify-center animate-bounce mr-4">1</span>
+                </div>
+                <!-- Math columns -->
+                <div class="font-mono text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">4</span><span class="text-emerald-500">7</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-slate-300"> </span><span class="text-emerald-500">8</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>5</span><span>5</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah Penyelesaian:</h4>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Kolom Satuan (S):</strong><br>7 + 8 = <strong class="text-red-500">15</strong>.<br>Tulis <strong class="text-emerald-600">5</strong> di bawah, simpan <strong class="text-red-500">1</strong> ke kolom puluhan (merah).
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Kolom Puluhan (P):</strong><br>4 + 1 (simpanan) = <strong class="text-blue-600">5</strong>. Tulis 5 di kolom puluhan.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 text-center">
+                  Hasil Akhir: 55 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 10: Latihan Cepat 1
+      {
+        id: 10,
+        category: "Latihan",
+        title: "✏️ Yuk Berlatih! Puluhan + Satuan",
+        notes: "Minta siswa mengisi jawaban langsung pada layar ini. Sistem akan langsung memvalidasi jawabannya.",
+        bgClass: "from-amber-50 to-yellow-50",
+        render: () => {
+          const exercises = [
+            { id: "ex1", q: "23 + 5", a: 28, hint: "Satuan: 3 + 5" },
+            { id: "ex2", q: "46 + 7", a: 53, hint: "Menyimpan! 6 + 7 = 13" },
+            { id: "ex3", q: "65 + 4", a: 69, hint: "Satuan: 5 + 4" },
+            { id: "ex4", q: "38 + 6", a: 44, hint: "Menyimpan! 8 + 6 = 14" },
+            { id: "ex5", q: "71 + 9", a: 80, hint: "Menyimpan! 1 + 9 = 10" },
+            { id: "ex6", q: "54 + 8", a: 62, hint: "Menyimpan! 4 + 8 = 12" }
+          ];
+          return renderExerciseForm(exercises);
+        }
+      },
+      // Slide 11: Kunci Jawaban Latihan 1
+      {
+        id: 11,
+        category: "Kunci Jawaban",
+        title: "✅ Kunci Jawaban — Puluhan + Satuan",
+        notes: "Tinjau bersama-sama hasil pekerjaan siswa. Pastikan mereka mencocokkan logika menyimpan mereka.",
+        bgClass: "from-emerald-50 to-teal-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-emerald-950 mb-4 text-center">Kunci Jawaban & Pembahasan 🎉</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">23 + 5</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 28</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">46 + 7</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 53</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">65 + 4</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 69</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">38 + 6</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 44</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">71 + 9</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 80</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100">
+                <span class="text-xs font-bold text-slate-400">54 + 8</span>
+                <p class="text-2xl font-bold text-emerald-600 font-header">= 62</p>
+              </div>
+            </div>
+            <div class="mt-6 flex justify-center items-center gap-3">
+              <span class="text-4xl">🏆</span>
+              <p class="font-header text-emerald-700 text-lg">Luar biasa! Kamu semakin pintar!</p>
+            </div>
+          </div>
+        `
+      },
+      // Slide 12: Penjumlahan Puluhan + Puluhan
+      {
+        id: 12,
+        category: "Penjumlahan",
+        title: "➕ Penjumlahan: Puluhan + Puluhan (Tanpa Simpan)",
+        notes: "Meningkatkan tingkat kesulitan ke operasi dua angka penuh.",
+        bgClass: "from-slate-50 to-indigo-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Contoh Kasus: 34 + 52 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col items-center">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-2 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Math columns -->
+                <div class="font-mono text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">3</span><span class="text-emerald-500">4</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">5</span><span class="text-emerald-500">2</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>8</span><span>6</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah Penyelesaian:</h4>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Kolom Satuan (S):</strong><br>4 + 2 = <strong class="text-emerald-600">6</strong>. Tulis 6 di bawah satuan.
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Kolom Puluhan (P):</strong><br>3 + 5 = <strong class="text-blue-600">8</strong>. Tulis 8 di bawah puluhan.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 text-center">
+                  Hasil Akhir: 86 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 13: Puluhan + Puluhan Dengan Simpan
+      {
+        id: 13,
+        category: "Penjumlahan",
+        title: "➕ Puluhan + Puluhan (Dengan Simpan)",
+        notes: "Ulangi konsep menyimpan, sekarang pada penjumlahan puluhan.",
+        bgClass: "from-purple-50 to-indigo-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Contoh Kasus: 57 + 38 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col items-center">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-1 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Carried indicator -->
+                <div class="flex justify-end w-36 pr-4 mb-1">
+                  <span class="w-8 h-6 w-6 rounded-full bg-red-500 text-white font-bold text-xs flex items-center justify-center animate-bounce mr-4">1</span>
+                  <span class="w-8"></span>
+                </div>
+                <!-- Math columns -->
+                <div class="font-mono text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">5</span><span class="text-emerald-500">7</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">3</span><span class="text-emerald-500">8</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>9</span><span>5</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah Penyelesaian:</h4>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Kolom Satuan (S):</strong><br>7 + 8 = <strong class="text-red-500">15</strong>.<br>Tulis <strong class="text-emerald-600">5</strong> di satuan, simpan <strong class="text-red-500">1</strong> di puluhan (merah).
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Kolom Puluhan (P):</strong><br>5 + 3 + 1 (simpanan) = <strong class="text-blue-600">9</strong>. Tulis 9 di puluhan.
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 text-center">
+                  Hasil Akhir: 95 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 14: Latihan Puluhan + Puluhan
+      {
+        id: 14,
+        category: "Latihan",
+        title: "✏  Latihan Soal — Puluhan + Puluhan",
+        notes: "Gunakan kemampuan hitung bersusun untuk memecahkan latihan mandiri ini.",
+        bgClass: "from-purple-50 to-indigo-100",
+        render: () => {
+          const exercises = [
+            { id: "ex7", q: "32 + 45", a: 77, hint: "Mudah! Tidak perlu menyimpan." },
+            { id: "ex8", q: "64 + 28", a: 92, hint: "Menyimpan! 4 + 8 = 12" },
+            { id: "ex9", q: "45 + 37", a: 82, hint: "Menyimpan! 5 + 7 = 12" },
+            { id: "ex10", q: "76 + 19", a: 95, hint: "Menyimpan! 6 + 9 = 15" },
+            { id: "ex11", q: "58 + 33", a: 91, hint: "Menyimpan! 8 + 3 = 11" },
+            { id: "ex12", q: "47 + 46", a: 93, hint: "Menyimpan! 7 + 6 = 13" }
+          ];
+          return renderExerciseForm(exercises);
+        }
+      },
+      // Slide 15: Kunci Jawaban Latihan 2
+      {
+        id: 15,
+        category: "Kunci Jawaban",
+        title: "✅ Kunci Jawaban — Puluhan + Puluhan",
+        notes: "Ulas bersama tantangan penjumlahan dua angka.",
+        bgClass: "from-teal-50 to-emerald-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-center">
+            <h2 class="font-header text-2xl text-indigo-950 mb-4">Jawaban Kerja Kerasmu! 🌟</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">32 + 45</span>
+                <p class="text-2xl font-header text-emerald-600">= 77</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">64 + 28</span>
+                <p class="text-2xl font-header text-emerald-600">= 92</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">45 + 37</span>
+                <p class="text-2xl font-header text-emerald-600">= 82</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">76 + 19</span>
+                <p class="text-2xl font-header text-emerald-600">= 95</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">58 + 33</span>
+                <p class="text-2xl font-header text-emerald-600">= 91</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">47 + 46</span>
+                <p class="text-2xl font-header text-emerald-600">= 93</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 16: Penjumlahan Ratusan + Ratusan
+      {
+        id: 16,
+        category: "Penjumlahan",
+        title: "➕ Ratusan + Ratusan (Tanpa Simpan)",
+        notes: "Memperkenalkan kolom Ratusan (R) dalam perhitungan bersusun.",
+        bgClass: "from-blue-50 to-indigo-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Contoh Kasus: 234 + 152 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col items-center font-mono">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-2 text-center w-48 justify-end pr-4">
+                  <span class="text-purple-500 w-8">R</span>
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Math columns -->
+                <div class="text-3xl font-extrabold text-slate-700 space-y-1 text-right w-48 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">2</span><span class="text-blue-500">3</span><span class="text-emerald-500">4</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">1</span><span class="text-blue-500">5</span><span class="text-emerald-500">2</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>3</span><span>8</span><span>6</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah Penyelesaian:</h4>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Satuan:</strong> 4 + 2 = <strong class="text-emerald-600">6</strong>.
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Puluhan:</strong> 3 + 5 = <strong class="text-blue-600">8</strong>.
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-purple-600">3. Ratusan:</strong> 2 + 1 = <strong class="text-purple-600">3</strong>.
+                </div>
+                <div class="bg-indigo-50 p-2 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 text-center">
+                  Hasil Akhir: 386 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 17: Ratusan + Ratusan (Dengan Simpan)
+      {
+        id: 17,
+        category: "Penjumlahan",
+        title: "➕ Ratusan + Ratusan (Dengan Simpan)",
+        notes: "Latihan menyimpan ganda (di puluhan dan ratusan). Ini tantangan terbesar dalam materi penjumlahan kelas 3 SD.",
+        bgClass: "from-orange-50 to-coral-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Tantangan Ekstra: 375 + 248 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm flex flex-col items-center font-mono">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-1 text-center w-48 justify-end pr-4">
+                  <span class="text-purple-500 w-8">R</span>
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Carried indicators -->
+                <div class="flex justify-end w-48 pr-4 mb-1 gap-4">
+                  <span class="w-8 h-6 w-6 rounded-full bg-red-500 text-white font-bold text-xs flex items-center justify-center animate-bounce">1</span>
+                  <span class="w-8 h-6 w-6 rounded-full bg-red-500 text-white font-bold text-xs flex items-center justify-center animate-bounce">1</span>
+                  <span class="w-8"></span>
+                </div>
+                <!-- Math columns -->
+                <div class="text-3xl font-extrabold text-slate-700 space-y-1 text-right w-48 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">3</span><span class="text-blue-500">7</span><span class="text-emerald-500">5</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">2</span><span class="text-blue-500">4</span><span class="text-emerald-500">8</span><span class="text-xs text-slate-400 font-sans self-center font-bold">+</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>6</span><span>2</span><span>3</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah demi Langkah:</h4>
+                <div class="bg-white p-2 rounded-xl border border-slate-100 text-[11px] leading-relaxed">
+                  <strong class="text-emerald-600">1. Satuan:</strong> 5 + 8 = <strong class="text-red-500">13</strong>. Tulis <strong class="text-emerald-600">3</strong>, simpan <strong class="text-red-500">1</strong> ke puluhan.
+                </div>
+                <div class="bg-white p-2 rounded-xl border border-slate-100 text-[11px] leading-relaxed">
+                  <strong class="text-blue-600">2. Puluhan:</strong> 7 + 4 + 1 (simpanan) = <strong class="text-red-500">12</strong>. Tulis <strong class="text-blue-600">2</strong>, simpan <strong class="text-red-500">1</strong> ke ratusan.
+                </div>
+                <div class="bg-white p-2 rounded-xl border border-slate-100 text-[11px] leading-relaxed">
+                  <strong class="text-purple-600">3. Ratusan:</strong> 3 + 2 + 1 (simpanan) = <strong class="text-purple-600">6</strong>. Tulis 6.
+                </div>
+                <div class="bg-orange-50 p-2 rounded-xl border border-orange-100 text-xs font-bold text-orange-800 text-center">
+                  Hasil Akhir: 623 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 18: Latihan Ratusan
+      {
+        id: 18,
+        category: "Latihan",
+        title: "✏️ Latihan Soal — Ratusan + Ratusan",
+        notes: "Uji kemampuan siswa berurusan dengan angka-angka besar yang menantang.",
+        bgClass: "from-orange-50 to-red-100",
+        render: () => {
+          const exercises = [
+            { id: "ex13", q: "124 + 253", a: 377, hint: "Tidak perlu menyimpan." },
+            { id: "ex14", q: "346 + 228", a: 574, hint: "Menyimpan di kolom satuan!" },
+            { id: "ex15", q: "415 + 367", a: 782, hint: "Menyimpan di kolom satuan!" },
+            { id: "ex16", q: "258 + 134", a: 392, hint: "Menyimpan di kolom satuan!" },
+            { id: "ex17", q: "473 + 219", a: 692, hint: "Menyimpan di kolom satuan!" },
+            { id: "ex18", q: "581 + 347", a: 928, hint: "Menyimpan di kolom puluhan!" }
+          ];
+          return renderExerciseForm(exercises);
+        }
+      },
+      // Slide 19: Pengurangan Intro
+      {
+        id: 19,
+        category: "Pengurangan",
+        title: "➖ Pengurangan Bersusun",
+        notes: "Kini kita berpindah ke topik Pengurangan. Persiapkan siswa untuk konsep meminjam.",
+        bgClass: "from-indigo-50 to-blue-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-left">
+            <h2 class="font-header text-2xl text-slate-900 mb-2 text-center">Kurangi angka dari kanan ke kiri!</h2>
+            <p class="text-slate-600 text-xs mb-6 text-center">Empat aturan emas pengurangan bersusun:</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-2xl border border-indigo-100 flex gap-3">
+                <span class="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">1</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Sejajarkan Posisi</h4>
+                  <p class="text-xs text-slate-500 mt-1">Sama seperti penjumlahan, posisi angka di atas dan bawah harus lurus.</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-indigo-100 flex gap-3">
+                <span class="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">2</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Mulai dari Kanan</h4>
+                  <p class="text-xs text-slate-500 mt-1">Kerjakan dari satuan (paling kanan) baru meluncur ke arah kiri.</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-indigo-100 flex gap-3">
+                <span class="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">3</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Konsep Meminjam</h4>
+                  <p class="text-xs text-slate-500 mt-1">Jika angka atas lebih kecil dari angka bawah, pinjam 10 dari kolom kiri!</p>
+                </div>
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-indigo-100 flex gap-3">
+                <span class="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0">4</span>
+                <div>
+                  <h4 class="font-bold text-sm text-slate-800">Angka Kiri Berkurang</h4>
+                  <p class="text-xs text-slate-500 mt-1">Ingat, kolom kiri yang sudah dipinjam nilainya harus dikurangi 1.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 20: Pengurangan Puluhan - Satuan (Tanpa Pinjam)
+      {
+        id: 20,
+        category: "Pengurangan",
+        title: "➖ Puluhan − Satuan (Tanpa Pinjam)",
+        notes: "Konsep dasar pengurangan tanpa perlu peminjaman nilai.",
+        bgClass: "from-orange-50 to-amber-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Contoh Kasus: 47 − 3 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-orange-100 shadow-sm flex flex-col items-center font-mono">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-2 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Math columns -->
+                <div class="text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-blue-500">4</span><span class="text-emerald-500">7</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-slate-300"> </span><span class="text-emerald-500">3</span><span class="text-xs text-slate-400 font-sans self-center font-bold">−</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>4</span><span>4</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah demi Langkah:</h4>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Kolom Satuan (S):</strong><br>7 − 3 = <strong class="text-emerald-600">4</strong>. Tulis 4 di bawah satuan.
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Kolom Puluhan (P):</strong><br>4 − 0 = <strong class="text-blue-600">4</strong>. Tulis 4 di bawah puluhan.
+                </div>
+                <div class="bg-orange-50 p-3 rounded-xl border border-orange-100 text-xs font-bold text-orange-800 text-center">
+                  Hasil Akhir: 44 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 21: Pengurangan Dengan Meminjam
+      {
+        id: 21,
+        category: "Pengurangan",
+        title: "➖ Pengurangan dengan Meminjam",
+        notes: "Tunjukkan simulasi mencoret angka puluhan yang dipinjam. Konsep ini sangat visual dan butuh ketelitian ekstra.",
+        bgClass: "from-red-50 to-pink-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-3 text-center">Contoh Kasus: 53 − 7 = ...?</h2>
+            <p class="text-xs text-slate-500 text-center mb-4">Angka 3 tidak cukup dikurangi 7! Kita harus PINJAM dari sebelah kirinya!</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-red-200 shadow-sm flex flex-col items-center font-mono">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-1 text-center w-36 justify-end pr-4">
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Borrow helper indicators -->
+                <div class="flex justify-end w-36 pr-4 mb-1 gap-2 text-red-500 text-sm font-bold">
+                  <span class="w-8 text-center text-xs">4</span>
+                  <span class="w-8 text-center text-xs">13</span>
+                </div>
+                <!-- Math columns -->
+                <div class="text-3xl font-extrabold text-slate-700 space-y-1 text-right w-36 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-slate-300 relative">5<span class="absolute inset-0 border-t-4 border-red-500 rotate-45"></span></span><span class="text-slate-300 relative">3<span class="absolute inset-0 border-t-4 border-red-500 rotate-45"></span></span></div>
+                  <div class="flex justify-end gap-4"><span> </span><span class="text-emerald-500">7</span><span class="text-xs text-slate-400 font-sans self-center font-bold">−</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>4</span><span>6</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah demi Langkah:</h4>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Satuan (3 - 7):</strong> Tidak cukup! Pinjam 10 dari 5. Angka 3 berubah menjadi <strong class="text-red-500">13</strong>.<br>
+                  13 − 7 = <strong class="text-emerald-600">6</strong>.
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Puluhan:</strong> Angka 5 sudah dipinjam 1, maka tersisa <strong class="text-red-500">4</strong>.<br>
+                  4 − 0 = <strong class="text-blue-600">4</strong>.
+                </div>
+                <div class="bg-red-50 p-2 rounded-xl border border-red-100 text-xs font-bold text-red-800 text-center">
+                  Hasil Akhir: 46 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 22: Pengurangan Ratusan
+      {
+        id: 22,
+        category: "Pengurangan",
+        title: "➖ Ratusan − Ratusan (Tanpa Pinjam)",
+        notes: "Meningkatkan jangkauan angka ke ratusan.",
+        bgClass: "from-blue-50 to-indigo-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Contoh Kasus: 456 − 234 = ...?</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <!-- Visual Bersusun -->
+              <div class="bg-white p-6 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col items-center font-mono">
+                <!-- Column Header -->
+                <div class="flex gap-4 font-bold text-sm mb-2 text-center w-48 justify-end pr-4">
+                  <span class="text-purple-500 w-8">R</span>
+                  <span class="text-blue-500 w-8">P</span>
+                  <span class="text-emerald-500 w-8">S</span>
+                </div>
+                <!-- Math columns -->
+                <div class="text-3xl font-extrabold text-slate-700 space-y-1 text-right w-48 pr-4">
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">4</span><span class="text-blue-500">5</span><span class="text-emerald-500">6</span></div>
+                  <div class="flex justify-end gap-4"><span class="text-purple-500">2</span><span class="text-blue-500">3</span><span class="text-emerald-500">4</span><span class="text-xs text-slate-400 font-sans self-center font-bold">−</span></div>
+                  <hr class="border-t-4 border-slate-700">
+                  <div class="flex justify-end gap-4 text-orange-600"><span>2</span><span>2</span><span>2</span></div>
+                </div>
+              </div>
+
+              <!-- Steps List -->
+              <div class="space-y-3 text-left">
+                <h4 class="font-bold text-slate-800 text-sm">Langkah demi Langkah:</h4>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-emerald-600">1. Satuan:</strong> 6 − 4 = <strong class="text-emerald-600">2</strong>.
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-blue-600">2. Puluhan:</strong> 5 − 3 = <strong class="text-blue-600">2</strong>.
+                </div>
+                <div class="bg-white p-2.5 rounded-xl border border-slate-100 text-xs">
+                  <strong class="text-purple-600">3. Ratusan:</strong> 4 − 2 = <strong class="text-purple-600">2</strong>.
+                </div>
+                <div class="bg-indigo-50 p-2 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 text-center">
+                  Hasil Akhir: 222 ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 23: Latihan Pengurangan
+      {
+        id: 23,
+        category: "Latihan",
+        title: "✏️ Latihan Soal — Pengurangan",
+        notes: "Gabungan soal pengurangan sederhana dan meminjam.",
+        bgClass: "from-indigo-50 to-purple-100",
+        render: () => {
+          const exercises = [
+            { id: "ex19", q: "68 − 5", a: 63, hint: "Kurangi satuannya dulu." },
+            { id: "ex20", q: "75 − 38", a: 37, hint: "Meminjam dari kolom puluhan!" },
+            { id: "ex21", q: "93 − 47", a: 46, hint: "Meminjam dari kolom puluhan!" },
+            { id: "ex22", q: "426 − 213", a: 213, hint: "Ratusan bersusun mudah!" },
+            { id: "ex23", q: "547 − 329", a: 218, hint: "Meminjam pada satuan!" },
+            { id: "ex24", q: "862 − 447", a: 415, hint: "Meminjam pada satuan!" }
+          ];
+          return renderExerciseForm(exercises);
+        }
+      },
+      // Slide 24: Kunci Jawaban Pengurangan
+      {
+        id: 24,
+        category: "Kunci Jawaban",
+        title: "✅ Kunci Jawaban — Pengurangan",
+        notes: "Ulas bersama-sama tantangan peminjaman angka.",
+        bgClass: "from-emerald-50 to-emerald-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-center">
+            <h2 class="font-header text-2xl text-indigo-950 mb-4">Hasil Pekerjaan Penguranganmu! 🎉</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">68 − 5</span>
+                <p class="text-2xl font-header text-emerald-600">= 63</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">75 − 38</span>
+                <p class="text-2xl font-header text-emerald-600">= 37</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">93 − 47</span>
+                <p class="text-2xl font-header text-emerald-600">= 46</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">426 − 213</span>
+                <p class="text-2xl font-header text-emerald-600">= 213</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">547 − 329</span>
+                <p class="text-2xl font-header text-emerald-600">= 218</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">862 − 447</span>
+                <p class="text-2xl font-header text-emerald-600">= 415</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 25: Soal Cerita 1
+      {
+        id: 25,
+        category: "Soal Cerita",
+        title: "📖 Soal Cerita — Penjumlahan",
+        notes: "Uji penerapan nyata konsep matematika dalam bentuk cerita sehari-hari.",
+        bgClass: "from-emerald-50 to-green-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Tantangan Apel Budi 🍎</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Cerita -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-emerald-100 shadow-sm flex flex-col justify-center text-left">
+                <p class="text-slate-700 text-sm leading-relaxed">
+                  Budi mempunyai <strong class="text-emerald-600 font-bold">23 buah apel</strong>. 
+                  Kemudian ibunya membelikan lagi <strong class="text-emerald-600 font-bold">15 buah apel</strong>.
+                </p>
+                <p class="text-slate-800 font-bold mt-4 text-sm">Berapakah jumlah total apel Budi sekarang?</p>
+              </div>
+
+              <!-- Input Jawaban & Pembahasan -->
+              <div class="bg-emerald-50/50 p-5 rounded-3xl border-2 border-emerald-200 flex flex-col justify-between text-left">
+                <div>
+                  <h4 class="font-bold text-slate-700 text-xs mb-2">MASUKKAN JAWABANMU:</h4>
+                  <div class="flex gap-2">
+                    <input type="number" id="input-cerita-1" class="px-4 py-2 rounded-xl border-2 border-emerald-200 focus:outline-none focus:border-emerald-500 w-28 font-bold text-center text-lg" placeholder="0">
+                    <button onclick="checkStoryAnswer(1, 38)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Periksa</button>
+                  </div>
+                  <p id="story-feedback-1" class="text-xs font-bold mt-2"></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-emerald-200 text-xs text-slate-600">
+                  <strong>Penyelesaian:</strong><br>
+                  Diketahui: Apel awal = 23, Tambahan = 15<br>
+                  Model Matematika: <span class="font-mono font-bold text-emerald-700">23 + 15 = 38</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 26: Soal Cerita 2
+      {
+        id: 26,
+        category: "Soal Cerita",
+        title: "📖 Soal Cerita — Pengurangan",
+        notes: "Mencari selisih atau sisa setelah diberikan kepada orang lain.",
+        bgClass: "from-orange-50 to-amber-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Sisa Permen Ani 🍬</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Cerita -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-orange-100 shadow-sm flex flex-col justify-center text-left">
+                <p class="text-slate-700 text-sm leading-relaxed">
+                  Ani mempunyai <strong class="text-orange-600 font-bold">56 permen</strong>. 
+                  Ia memberikan <strong class="text-orange-600 font-bold">24 permen</strong> kepada adiknya.
+                </p>
+                <p class="text-slate-800 font-bold mt-4 text-sm">Berapakah sisa permen Ani sekarang?</p>
+              </div>
+
+              <!-- Input Jawaban -->
+              <div class="bg-orange-50/50 p-5 rounded-3xl border-2 border-orange-200 flex flex-col justify-between text-left">
+                <div>
+                  <h4 class="font-bold text-slate-700 text-xs mb-2">MASUKKAN JAWABANMU:</h4>
+                  <div class="flex gap-2">
+                    <input type="number" id="input-cerita-2" class="px-4 py-2 rounded-xl border-2 border-orange-200 focus:outline-none focus:border-orange-500 w-28 font-bold text-center text-lg" placeholder="0">
+                    <button onclick="checkStoryAnswer(2, 32)" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Periksa</button>
+                  </div>
+                  <p id="story-feedback-2" class="text-xs font-bold mt-2"></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-orange-200 text-xs text-slate-600">
+                  <strong>Penyelesaian:</strong><br>
+                  Diketahui: Total permen = 56, Diberikan = 24<br>
+                  Model Matematika: <span class="font-mono font-bold text-orange-700">56 − 24 = 32</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 27: Soal Cerita 3
+      {
+        id: 27,
+        category: "Soal Cerita",
+        title: "📖 Soal Cerita — Penjumlahan Ratusan",
+        notes: "Meningkatkan jangkauan angka ke ratusan.",
+        bgClass: "from-blue-50 to-indigo-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Buku Perpustakaan Sekolah 📚</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Cerita -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-blue-100 shadow-sm flex flex-col justify-center text-left">
+                <p class="text-slate-700 text-xs leading-relaxed">
+                  Perpustakaan sekolah mempunyai <strong class="text-blue-600 font-bold">245 buku cerita</strong>. 
+                  Kemudian perpustakaan tersebut mendapat sumbangan lagi sebanyak <strong class="text-blue-600 font-bold">137 buku baru</strong>.
+                </p>
+                <p class="text-slate-800 font-bold mt-4 text-xs">Berapakah jumlah total buku perpustakaan sekarang?</p>
+              </div>
+
+              <!-- Input Jawaban -->
+              <div class="bg-blue-50/50 p-5 rounded-3xl border-2 border-blue-200 flex flex-col justify-between text-left">
+                <div>
+                  <h4 class="font-bold text-slate-700 text-xs mb-2">MASUKKAN JAWABANMU:</h4>
+                  <div class="flex gap-2">
+                    <input type="number" id="input-cerita-3" class="px-4 py-2 rounded-xl border-2 border-blue-200 focus:outline-none focus:border-blue-500 w-28 font-bold text-center text-lg" placeholder="0">
+                    <button onclick="checkStoryAnswer(3, 382)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Periksa</button>
+                  </div>
+                  <p id="story-feedback-3" class="text-xs font-bold mt-2"></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-blue-200 text-xs text-slate-600">
+                  <strong>Penyelesaian:</strong><br>
+                  Diketahui: Buku awal = 245, Sumbangan = 137<br>
+                  Model Matematika: <span class="font-mono font-bold text-blue-700">245 + 137 = 382</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 28: Soal Cerita 4
+      {
+        id: 28,
+        category: "Soal Cerita",
+        title: "📖 Soal Cerita — Pengurangan Ratusan",
+        notes: "Mencari sisa slot kosong tempat parkir.",
+        bgClass: "from-purple-50 to-indigo-50",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Tempat Parkir Mall 🚗</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Cerita -->
+              <div class="bg-white p-5 rounded-3xl border-2 border-purple-100 shadow-sm flex flex-col justify-center text-left">
+                <p class="text-slate-700 text-xs leading-relaxed">
+                  Parkiran sebuah mall memiliki kapasitas <strong class="text-purple-600 font-bold">468 tempat parkir</strong>. 
+                  Sebanyak <strong class="text-purple-600 font-bold">235 tempat parkir</strong> sudah terisi oleh mobil pengunjung.
+                </p>
+                <p class="text-slate-800 font-bold mt-4 text-xs">Berapa sisa tempat parkir kosong yang masih tersedia?</p>
+              </div>
+
+              <!-- Input Jawaban -->
+              <div class="bg-purple-50/50 p-5 rounded-3xl border-2 border-purple-200 flex flex-col justify-between text-left">
+                <div>
+                  <h4 class="font-bold text-slate-700 text-xs mb-2">MASUKKAN JAWABANMU:</h4>
+                  <div class="flex gap-2">
+                    <input type="number" id="input-cerita-4" class="px-4 py-2 rounded-xl border-2 border-purple-200 focus:outline-none focus:border-purple-500 w-28 font-bold text-center text-lg" placeholder="0">
+                    <button onclick="checkStoryAnswer(4, 233)" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Periksa</button>
+                  </div>
+                  <p id="story-feedback-4" class="text-xs font-bold mt-2"></p>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-purple-200 text-xs text-slate-600">
+                  <strong>Penyelesaian:</strong><br>
+                  Diketahui: Total parkir = 468, Terisi = 235<br>
+                  Model Matematika: <span class="font-mono font-bold text-purple-700">468 − 235 = 233</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 29: Soal Cerita 5 (Tantangan Gabungan)
+      {
+        id: 29,
+        category: "Tantangan",
+        title: "📖 Soal Cerita — Tantangan!",
+        notes: "Soal cerita multi-langkah (penjumlahan dilanjutkan dengan pengurangan). Latih anak membedakan kedua operasi.",
+        bgClass: "from-amber-50 to-orange-100",
+        render: () => `
+          <div class="w-full max-w-4xl">
+            <h2 class="font-header text-2xl text-orange-950 mb-3 text-center">Ayam Pak Hasan 🐔</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Cerita -->
+              <div class="bg-white p-4 rounded-3xl border-2 border-orange-100 shadow-sm flex flex-col justify-center text-left">
+                <p class="text-slate-700 text-xs leading-relaxed">
+                  Pak Hasan memiliki <strong class="text-orange-600">125 ekor ayam</strong>. 
+                  Hari Senin ia membeli lagi <strong class="text-emerald-600">43 ekor ayam</strong>. 
+                  Namun hari Rabu sebanyak <strong class="text-red-500">58 ekor ayamnya</strong> laku dijual ke pasar.
+                </p>
+                <p class="text-slate-800 font-bold mt-3 text-xs">Berapakah jumlah ayam Pak Hasan yang tersisa sekarang?</p>
+              </div>
+
+              <!-- Input Jawaban -->
+              <div class="bg-orange-50/50 p-4 rounded-3xl border-2 border-orange-200 flex flex-col justify-between text-left">
+                <div>
+                  <h4 class="font-bold text-slate-700 text-xs mb-2">MASUKKAN JAWABANMU:</h4>
+                  <div class="flex gap-2">
+                    <input type="number" id="input-cerita-5" class="px-4 py-2 rounded-xl border-2 border-orange-200 focus:outline-none focus:border-orange-500 w-28 font-bold text-center text-lg" placeholder="0">
+                    <button onclick="checkStoryAnswer(5, 110)" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition">Periksa</button>
+                  </div>
+                  <p id="story-feedback-5" class="text-xs font-bold mt-2"></p>
+                </div>
+
+                <div class="mt-3 pt-2 border-t border-orange-200 text-[11px] text-slate-600">
+                  <strong>Penyelesaian Dua Langkah:</strong><br>
+                  1. Penjumlahan: 125 + 43 = 168 ekor<br>
+                  2. Pengurangan: 168 − 58 = <span class="font-mono font-bold text-orange-700">110 ekor ayam</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 30: Soal Campuran
+      {
+        id: 30,
+        category: "Latihan",
+        title: "🔢 Soal Hitungan Campuran",
+        notes: "Latihan kombinasi yang menguji ketelitian siswa dalam memperhatikan lambang operasi matematika (+ atau -).",
+        bgClass: "from-emerald-50 to-teal-50",
+        render: () => {
+          const exercises = [
+            { id: "ex25", q: "235 + 142", a: 377, hint: "Awas jangan salah operasi (+)" },
+            { id: "ex26", q: "489 − 256", a: 233, hint: "Awas jangan salah operasi (-)" },
+            { id: "ex27", q: "367 + 228", a: 595, hint: "Operasi (+) dan menyimpan!" },
+            { id: "ex28", q: "734 − 418", a: 316, hint: "Operasi (-) dan meminjam!" },
+            { id: "ex29", q: "156 + 385", a: 541, hint: "Operasi (+) dan menyimpan!" },
+            { id: "ex30", q: "923 − 576", a: 347, hint: "Operasi (-) dan meminjam!" }
+          ];
+          return renderExerciseForm(exercises);
+        }
+      },
+      // Slide 31: Kunci Jawaban Campuran
+      {
+        id: 31,
+        category: "Kunci Jawaban",
+        title: "✅ Kunci Jawaban — Soal Campuran",
+        notes: "Bahas satu-persatu letak kesalahan siswa jika ada.",
+        bgClass: "from-teal-50 to-emerald-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-center">
+            <h2 class="font-header text-2xl text-indigo-950 mb-4">Jawaban Hitungan Campuran 🎉</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">235 + 142</span>
+                <p class="text-2xl font-header text-emerald-600">= 377</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-red-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">489 − 256</span>
+                <p class="text-2xl font-header text-red-600">= 233</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">367 + 228</span>
+                <p class="text-2xl font-header text-emerald-600">= 595</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-red-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">734 − 418</span>
+                <p class="text-2xl font-header text-red-600">= 316</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-emerald-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">156 + 385</span>
+                <p class="text-2xl font-header text-emerald-600">= 541</p>
+              </div>
+              <div class="bg-white p-3 rounded-2xl border border-red-100 shadow-sm">
+                <span class="text-xs text-slate-400 font-bold">923 − 576</span>
+                <p class="text-2xl font-header text-red-600">= 347</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 32: Uji Pemahaman Pilihan Ganda
+      {
+        id: 32,
+        category: "Kuis",
+        title: "🏆 Uji Pemahaman",
+        notes: "Kuis singkat untuk mengecek pemahaman secara keseluruhan sebelum menutup pembelajaran.",
+        bgClass: "from-amber-50 to-orange-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-left space-y-6">
+            <h2 class="font-header text-2xl text-slate-950 mb-3 text-center">Pilih Jawaban yang Benar! 🏆</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Pertanyaan 1 -->
+              <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 text-sm mb-3">1. Hasil dari 247 + 135 = ...</h4>
+                <div class="space-y-2">
+                  <button onclick="checkQuizAnswer('q1', 'A')" id="q1-opt-A" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">A. 372</button>
+                  <button onclick="checkQuizAnswer('q1', 'B')" id="q1-opt-B" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">B. 382 ✓ (Benar)</button>
+                  <button onclick="checkQuizAnswer('q1', 'C')" id="q1-opt-C" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">C. 392</button>
+                  <button onclick="checkQuizAnswer('q1', 'D')" id="q1-opt-D" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">D. 482</button>
+                </div>
+                <p id="q1-feedback" class="text-xs font-bold mt-2"></p>
+              </div>
+
+              <!-- Pertanyaan 2 -->
+              <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                <h4 class="font-bold text-slate-800 text-sm mb-3">2. Hasil dari 563 − 248 = ...</h4>
+                <div class="space-y-2">
+                  <button onclick="checkQuizAnswer('q2', 'A')" id="q2-opt-A" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">A. 305</button>
+                  <button onclick="checkQuizAnswer('q2', 'B')" id="q2-opt-B" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">B. 315 ✓ (Benar)</button>
+                  <button onclick="checkQuizAnswer('q2', 'C')" id="q2-opt-C" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">C. 325</button>
+                  <button onclick="checkQuizAnswer('q2', 'D')" id="q2-opt-D" class="w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold">D. 335</button>
+                </div>
+                <p id="q2-feedback" class="text-xs font-bold mt-2"></p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 33: Ringkasan Materi
+      {
+        id: 33,
+        category: "Kesimpulan",
+        title: "📋 Ringkasan Materi",
+        notes: "Ulang materi secara garis besar agar tersimpan lama dalam memori anak.",
+        bgClass: "from-indigo-50 to-indigo-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-left">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">Apa yang Telah Kita Pelajari Hari Ini?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white p-3 rounded-xl border border-indigo-100 flex gap-3 items-center">
+                <span class="text-2xl">🧠</span>
+                <div>
+                  <h4 class="font-bold text-xs">Macam Strategi</h4>
+                  <p class="text-[10px] text-slate-500">Maju/mundur, pembulatan bilangan, memecah puluhan/satuan.</p>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-indigo-100 flex gap-3 items-center">
+                <span class="text-2xl">🏠</span>
+                <div>
+                  <h4 class="font-bold text-xs">Nilai Tempat</h4>
+                  <p class="text-[10px] text-slate-500">Posisi Ratusan, Puluhan, Satuan harus sejajar vertikal saat bersusun.</p>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-indigo-100 flex gap-3 items-center">
+                <span class="text-2xl">➕</span>
+                <div>
+                  <h4 class="font-bold text-xs">Konsep Menyimpan</h4>
+                  <p class="text-[10px] text-slate-500">Jika penjumlahan per kolom ≥ 10, simpan digit puluhannya ke kiri.</p>
+                </div>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-indigo-100 flex gap-3 items-center">
+                <span class="text-2xl">➖</span>
+                <div>
+                  <h4 class="font-bold text-xs">Konsep Meminjam</h4>
+                  <p class="text-[10px] text-slate-500">Jika angka atas lebih kecil, pinjam 10 dari angka kirinya.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 34: Kiat Belajar
+      {
+        id: 34,
+        category: "Tips Sukses",
+        title: "💡 Tips Belajar untuk Kamu!",
+        notes: "Berikan tips praktis di rumah agar mereka termotivasi rajin mencoba sendiri.",
+        bgClass: "from-amber-50 to-yellow-100",
+        render: () => `
+          <div class="w-full max-w-4xl text-left">
+            <h2 class="font-header text-2xl text-slate-900 mb-4 text-center">💡 Tips Agar Matematikamu Selalu Hebat!</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="bg-white p-4 rounded-2xl border border-amber-100">
+                ✏️ <strong>Tulis dengan Rapi:</strong> Selalu buat angka sejajar kolom agar tidak salah hitung.
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100">
+                🔴 <strong>Tandai Simpanan:</strong> Beri coretan kecil angka 1 di atas agar tidak lupa ditambahkan.
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100">
+                📐 <strong>Coret yang Dipinjam:</strong> Selalu langsung coret angka kiri jika dipinjam agar sisa nilainya ingat.
+              </div>
+              <div class="bg-white p-4 rounded-2xl border border-amber-100">
+                💪 <strong>Latihan Tiap Hari:</strong> Kerjakan 2 atau 3 soal saja tiap sore biar makin hebat dan cerdas!
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // Slide 35: Penutup
+      {
+        id: 35,
+        category: "Selesai",
+        title: "Luar Biasa!",
+        notes: "Tunjukkan apresiasi paling hangat untuk siswa yang menyelesaikan seluruh slide hari ini.",
+        bgClass: "from-indigo-900 to-indigo-950 text-white",
+        render: () => `
+          <div class="flex flex-col items-center justify-center space-y-6 max-w-2xl text-center">
+            <div class="text-6xl animate-bounce">🏆</div>
+            <h1 class="font-header text-4xl md:text-5xl text-amber-300">Selamat, Kamu Hebat!</h1>
+            <p class="text-sm md:text-base text-indigo-100">
+              Kamu telah berhasil menuntaskan semua petualangan belajar Penjumlahan dan Pengurangan Bersusun!
+            </p>
+            <div class="bg-white/10 border border-white/20 px-6 py-4 rounded-3xl w-full max-w-md space-y-2">
+              <h4 class="font-bold text-amber-300 text-sm">Prestasi Belajar Hari Ini:</h4>
+              <p class="text-xs text-indigo-200">✓ Menguasai strategi hitung mental cepat</p>
+              <p class="text-xs text-indigo-200">✓ Mampu menghitung penjumlahan & menyimpan</p>
+              <p class="text-xs text-indigo-200">✓ Menguasai konsep pengurangan bersusun meminjam</p>
+            </div>
+            <button onclick="celebrateSuccess()" class="bg-orange-500 hover:bg-orange-600 text-white font-header px-8 py-3 rounded-2xl shadow-lg border-2 border-orange-400 transition transform hover:scale-105 active:scale-95">
+              Rayakan Kelulusan! 🎉
+            </button>
+          </div>
+        `
+      }
+    ];
+
+    // Helper: Render Latihan Form
+    function renderExerciseForm(exercises) {
+      return `
+        <div class="w-full max-w-4xl text-left">
+          <h2 class="font-header text-xl text-slate-900 mb-2 text-center">Yuk tantang dirimu, hitung langsung di bawah ini!</h2>
+          <p class="text-xs text-slate-500 mb-4 text-center">Isi semua kotak kosong, lalu klik tombol Periksa di sampingnya.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            ${exercises.map((ex, i) => {
+              const isCorrect = answeredQuestions[ex.id] === true;
+              return `
+                <div class="bg-white p-3 rounded-2xl border-2 ${isCorrect ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-100'} shadow-sm flex flex-col justify-between h-[130px]">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">Soal ${i+1}</span>
+                    <span class="text-[10px] text-slate-400 font-bold">${ex.hint}</span>
+                  </div>
+                  <div class="flex items-center gap-2 my-2">
+                    <span class="font-mono text-base font-bold text-slate-700 w-16 text-right">${ex.q} =</span>
+                    <input type="number" id="input-${ex.id}" value="${isCorrect ? ex.a : ''}" ${isCorrect ? 'disabled' : ''} class="w-20 px-2 py-1.5 border-2 rounded-xl focus:outline-none focus:border-indigo-500 font-bold text-center text-sm" placeholder="?">
+                    ${isCorrect ? `
+                      <span class="text-emerald-600"><i data-lucide="check-circle" class="w-5 h-5"></i></span>
+                    ` : `
+                      <button onclick="checkExerciseAnswer('${ex.id}', ${ex.a})" class="bg-indigo-600 hover:bg-indigo-700 text-white p-1.5 rounded-xl transition text-xs font-bold">Ok</button>
+                    `}
+                  </div>
+                  <p id="feedback-${ex.id}" class="text-[10px] font-bold ${isCorrect ? 'text-emerald-600' : 'text-slate-400'}">
+                    ${isCorrect ? 'Benar! +10 Bintang' : 'Belum diisi'}
+                  </p>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Tab Switcher
+    function switchTab(tabId) {
+      playBeep('click');
+      document.getElementById('section-presentation').classList.add('hidden');
+      document.getElementById('section-simulators').classList.add('hidden');
+      document.getElementById('section-scratchpad').classList.add('hidden');
+
+      document.getElementById('tab-presentation').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all text-indigo-200 hover:text-white';
+      document.getElementById('tab-simulators').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all text-indigo-200 hover:text-white';
+      document.getElementById('tab-scratchpad').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all text-indigo-200 hover:text-white';
+
+      if (tabId === 'presentation') {
+        document.getElementById('section-presentation').classList.remove('hidden');
+        document.getElementById('tab-presentation').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all bg-amber-400 text-indigo-950';
+      } else if (tabId === 'simulators') {
+        document.getElementById('section-simulators').classList.remove('hidden');
+        document.getElementById('tab-simulators').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all bg-amber-400 text-indigo-950';
+        drawPlaceValueBlocks();
+        calculateSim();
+      } else if (tabId === 'scratchpad') {
+        document.getElementById('section-scratchpad').classList.remove('hidden');
+        document.getElementById('tab-scratchpad').className = 'flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all bg-amber-400 text-indigo-950';
+        resizeCanvas();
+      }
+      lucide.createIcons();
+    }
+
+    // Build Slide Index Sidebar list
+    function buildSlideIndex() {
+      const container = document.getElementById('slide-index-list');
+      container.innerHTML = slidesData.map((s, i) => {
+        const isCurrent = i === currentSlide;
+        const isCompleted = completedSlides.includes(i);
+        return `
+          <button onclick="jumpToSlide(${s.id})" class="w-full text-left p-2 rounded-xl text-xs font-bold transition-all flex items-center justify-between gap-2 ${
+            isCurrent ? 'bg-indigo-100 text-indigo-950 border-l-4 border-indigo-600' : 'hover:bg-slate-50 text-slate-600'
+          }">
+            <span class="truncate pr-2">${s.id}. ${s.title}</span>
+            <span class="shrink-0 flex items-center gap-1">
+              ${isCompleted ? '<span class="text-emerald-500">✓</span>' : ''}
+              <span class="px-1.5 py-0.5 rounded text-[8px] tracking-wider uppercase font-extrabold ${getCategoryBg(s.category)}">${s.category}</span>
+            </span>
+          </button>
+        `;
+      }).join('');
+      updateProgressTracker();
+    }
+
+    function getCategoryBg(cat) {
+      switch(cat) {
+        case 'Pembuka': return 'bg-amber-100 text-amber-800';
+        case 'Kesimpulan': return 'bg-indigo-100 text-indigo-800';
+        case 'Latihan': return 'bg-purple-100 text-purple-800';
+        case 'Kuis': return 'bg-pink-100 text-pink-800';
+        case 'Pengurangan': return 'bg-red-100 text-red-800';
+        default: return 'bg-emerald-100 text-emerald-800';
+      }
+    }
+
+    // Slide Rendering
+    function renderCurrentSlide() {
+      const s = slidesData[currentSlide];
+      const card = document.getElementById('slide-card');
+      const contentZone = document.getElementById('slide-content-zone');
+      const categoryBadge = document.getElementById('slide-category-badge');
+      const numIndicator = document.getElementById('slide-num-indicator');
+      const notes = document.getElementById('slide-instructor-notes');
+
+      // Set colors
+      card.className = `bg-gradient-to-br ${s.bgClass} rounded-[32px] p-5 md:p-8 shadow-xl border-4 border-white/20 transition-all duration-500 min-h-[500px] lg:h-[580px] flex flex-col justify-between relative overflow-hidden`;
+      
+      categoryBadge.innerText = s.category;
+      categoryBadge.className = `px-4 py-1 rounded-full text-xs font-extrabold tracking-wide uppercase shadow-sm ${
+        s.bgClass.includes('text-white') ? 'bg-white/20 text-white' : 'bg-indigo-900 text-white'
+      }`;
+      
+      numIndicator.innerText = `Slide ${s.id} / ${slidesData.length}`;
+      notes.innerText = s.notes;
+
+      // Inject Content
+      contentZone.innerHTML = s.render();
+
+      // Build Sidebar to match active state
+      buildSlideIndex();
+
+      // Ensure Lucide icons render inside newly injected HTML
+      lucide.createIcons();
+
+      // If we visit this slide, mark it as completed
+      if (!completedSlides.includes(currentSlide)) {
+        completedSlides.push(currentSlide);
+        localStorage.setItem('math_sd3_completed', JSON.stringify(completedSlides));
+        updateProgressTracker();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < slidesData.length - 1) {
+        currentSlide++;
+        playBeep('click');
+        renderCurrentSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        playBeep('click');
+        renderCurrentSlide();
+      }
+    }
+
+    function jumpToSlide(slideId) {
+      const idx = slidesData.findIndex(s => s.id === slideId);
+      if (idx !== -1) {
+        currentSlide = idx;
+        playBeep('click');
+        renderCurrentSlide();
+      }
+    }
+
+    function updateProgressTracker() {
+      const bar = document.getElementById('progress-bar-fill');
+      const text = document.getElementById('progress-text');
+      const percent = Math.round((completedSlides.length / slidesData.length) * 100);
+      bar.style.width = `${percent}%`;
+      text.innerText = `${completedSlides.length} / ${slidesData.length} Selesai`;
+    }
+
+    // Exercise Answer Checkers
+    function checkExerciseAnswer(id, correctVal) {
+      const input = document.getElementById(`input-${id}`);
+      const feedback = document.getElementById(`feedback-${id}`);
+      const val = parseInt(input.value);
+
+      if (val === correctVal) {
+        playBeep('success');
+        confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
+        answeredQuestions[id] = true;
+        localStorage.setItem('math_sd3_answered', JSON.stringify(answeredQuestions));
+        addStars(10);
+        renderCurrentSlide();
+      } else {
+        playBeep('wrong');
+        feedback.innerText = "❌ Kurang tepat, coba hitung lagi ya!";
+        feedback.className = "text-[10px] font-bold text-red-600";
+        input.classList.add('border-red-500', 'animate-shake');
+        setTimeout(() => input.classList.remove('animate-shake'), 500);
+      }
+    }
+
+    // Story Answer Checkers
+    function checkStoryAnswer(num, correctVal) {
+      const input = document.getElementById(`input-cerita-${num}`);
+      const feedback = document.getElementById(`story-feedback-${num}`);
+      const val = parseInt(input.value);
+
+      if (val === correctVal) {
+        playBeep('success');
+        confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+        feedback.innerText = "🎉 Benar sekali! Keren! (+15 Bintang)";
+        feedback.className = "text-xs font-bold text-emerald-600 mt-2";
+        addStars(15);
+      } else {
+        playBeep('wrong');
+        feedback.innerText = "❌ Sisa perhitungannya kurang pas. Coba lagi bersusun ya!";
+        feedback.className = "text-xs font-bold text-red-600 mt-2";
+      }
+    }
+
+    // Quiz Option Checker
+    function checkQuizAnswer(qId, selectedOption) {
+      const correctAnswers = { q1: 'B', q2: 'B' };
+      const feedback = document.getElementById(`${qId}-feedback`);
+      const isCorrect = selectedOption === correctAnswers[qId];
+
+      // Reset options styling
+      ['A', 'B', 'C', 'D'].forEach(opt => {
+        const btn = document.getElementById(`${qId}-opt-${opt}`);
+        if (btn) btn.className = "w-full text-left p-2.5 rounded-xl border border-slate-200 text-xs hover:bg-slate-50 transition font-bold text-slate-700 bg-white";
+      });
+
+      const selectedBtn = document.getElementById(`${qId}-opt-${selectedOption}`);
+      if (isCorrect) {
+        playBeep('success');
+        confetti({ particleCount: 40, spread: 60, origin: { y: 0.8 } });
+        selectedBtn.className = "w-full text-left p-2.5 rounded-xl border-2 border-emerald-500 text-xs bg-emerald-50 text-emerald-800 transition font-bold";
+        feedback.innerText = "🎉 Benar! Hebat sekali! (+20 Bintang)";
+        feedback.className = "text-xs font-bold text-emerald-600 mt-2 animate-bounce";
+        addStars(20);
+      } else {
+        playBeep('wrong');
+        selectedBtn.className = "w-full text-left p-2.5 rounded-xl border-2 border-red-500 text-xs bg-red-50 text-red-800 transition font-bold";
+        feedback.innerText = "❌ Pilihan itu belum benar. Gunakan papan cakar jika bingung!";
+        feedback.className = "text-xs font-bold text-red-600 mt-2";
+      }
+    }
+
+    // Stars Tracker
+    function addStars(num) {
+      starsEarned += num;
+      localStorage.setItem('math_sd3_stars', starsEarned);
+      document.getElementById('star-count').innerText = starsEarned;
+    }
+
+    function resetStars() {
+      if (confirm("Apakah kamu yakin ingin mereset bintang dan semua progres latihanmu?")) {
+        starsEarned = 0;
+        answeredQuestions = {};
+        completedSlides = [];
+        localStorage.clear();
+        document.getElementById('star-count').innerText = 0;
+        currentSlide = 0;
+        renderCurrentSlide();
+      }
+    }
+
+    function celebrateSuccess() {
+      playBeep('success');
+      const duration = 3 * 1000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 }
+        });
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 }
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    // Text to Speech (using basic Web Speech Synthesis)
+    function readSlideText() {
+      try {
+        const s = slidesData[currentSlide];
+        // Grab clear texts
+        let cleanText = s.title + ". " + s.notes;
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = cleanText;
+        msg.lang = 'id-ID'; // Indonesian Accent
+        msg.rate = 1.0;
+        window.speechSynthesis.cancel(); // Stop current speech
+        window.speechSynthesis.speak(msg);
+      } catch(e) {
+        console.log("Speech Synthesizer not available on your system.");
+      }
+    }
+
+
+    // ==========================================
+    // SIMULATOR 1: PLACE VALUE BLOCKS DRAWER
+    // ==========================================
+    function drawPlaceValueBlocks() {
+      const input = document.getElementById('place-value-input');
+      let val = parseInt(input.value);
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > 999) val = 999;
+
+      const ratusan = Math.floor(val / 100);
+      const puluhan = Math.floor((val % 100) / 10);
+      const satuan = val % 10;
+
+      // Draw Ratusan
+      const rContainer = document.getElementById('block-container-ratusan');
+      rContainer.innerHTML = '';
+      for (let i = 0; i < ratusan; i++) {
+        rContainer.innerHTML += `
+          <div class="relative w-12 h-12 bg-purple-100 border-2 border-purple-400 rounded flex flex-wrap p-0.5" title="1 Ratusan (100)">
+            ${Array(9).fill().map(() => `<div class="w-2.5 h-2.5 bg-purple-300 border-[1px] border-purple-400 rounded-sm"></div>`).join('')}
+            <div class="absolute inset-0 bg-purple-500/10 flex items-center justify-center font-bold text-[10px] text-purple-700">100</div>
+          </div>
+        `;
+      }
+      if (ratusan === 0) rContainer.innerHTML = '<span class="text-[10px] text-slate-400">Kosong</span>';
+
+      // Draw Puluhan
+      const pContainer = document.getElementById('block-container-puluhan');
+      pContainer.innerHTML = '';
+      for (let i = 0; i < puluhan; i++) {
+        pContainer.innerHTML += `
+          <div class="w-3 h-12 bg-blue-100 border-2 border-blue-400 rounded flex flex-col p-0.5 justify-between" title="1 Puluhan (10)">
+            <div class="h-1.5 bg-blue-400 rounded-sm"></div>
+            <div class="h-1.5 bg-blue-400 rounded-sm"></div>
+            <div class="h-1.5 bg-blue-400 rounded-sm"></div>
+            <div class="h-1.5 bg-blue-400 rounded-sm"></div>
+          </div>
+        `;
+      }
+      if (puluhan === 0) pContainer.innerHTML = '<span class="text-[10px] text-slate-400">Kosong</span>';
+
+      // Draw Satuan
+      const sContainer = document.getElementById('block-container-satuan');
+      sContainer.innerHTML = '';
+      for (let i = 0; i < satuan; i++) {
+        sContainer.innerHTML += `
+          <div class="w-4 h-4 bg-emerald-400 border-2 border-emerald-600 rounded" title="1 Satuan (1)"></div>
+        `;
+      }
+      if (satuan === 0) sContainer.innerHTML = '<span class="text-[10px] text-slate-400">Kosong</span>';
+    }
+
+
+    // ==========================================
+    // SIMULATOR 2 & 3: BERSUSUN PINTAR VISUALIZER
+    // ==========================================
+    let simOperation = 'add'; // 'add' or 'sub'
+
+    function setSimOperation(op) {
+      simOperation = op;
+      playBeep('click');
+      
+      const btnAdd = document.getElementById('sim-op-add');
+      const btnSub = document.getElementById('sim-op-sub');
+      const opSign = document.getElementById('sim-operator-sign');
+
+      if (op === 'add') {
+        btnAdd.className = "bg-white text-indigo-950 px-3 py-1 rounded-lg text-xs font-bold shadow-sm transition";
+        btnSub.className = "text-slate-500 hover:text-slate-900 px-3 py-1 rounded-lg text-xs font-bold transition";
+        opSign.innerText = "+";
+      } else {
+        btnSub.className = "bg-white text-indigo-950 px-3 py-1 rounded-lg text-xs font-bold shadow-sm transition";
+        btnAdd.className = "text-slate-500 hover:text-slate-900 px-3 py-1 rounded-lg text-xs font-bold transition";
+        opSign.innerText = "−";
+      }
+      calculateSim();
+    }
+
+    function calculateSim() {
+      const num1Input = document.getElementById('sim-num-1');
+      const num2Input = document.getElementById('sim-num-2');
+      let n1 = parseInt(num1Input.value) || 0;
+      let n2 = parseInt(num2Input.value) || 0;
+
+      // Force limits
+      if (n1 > 999) n1 = 999;
+      if (n2 > 999) n2 = 999;
+      if (n1 < 0) n1 = 0;
+      if (n2 < 0) n2 = 0;
+
+      num1Input.value = n1;
+      num2Input.value = n2;
+
+      // Calculate Place Values
+      const n1_r = Math.floor(n1 / 100);
+      const n1_p = Math.floor((n1 % 100) / 10);
+      const n1_s = n1 % 10;
+
+      const n2_r = Math.floor(n2 / 100);
+      const n2_p = Math.floor((n2 % 100) / 10);
+      const n2_s = n2 % 10;
+
+      const columnRender = document.getElementById('sim-column-render');
+      const stepsContainer = document.getElementById('sim-steps-container');
+      
+      let finalResult = 0;
+      let stepsHtml = '';
+
+      if (simOperation === 'add') {
+        // === PENJUMLAHAN BERSUSUN ===
+        finalResult = n1 + n2;
+
+        // Carry detection
+        let carry_s = 0;
+        let carry_p = 0;
+
+        // Step 1: Satuan
+        let sum_s = n1_s + n2_s;
+        let step1_text = `<strong>① Kolom Satuan (S):</strong><br>${n1_s} + ${n2_s} = ${sum_s}.`;
+        if (sum_s >= 10) {
+          carry_s = 1;
+          step1_text += `<br>Karena hasil ≥ 10, tulis <strong>${sum_s % 10}</strong> di bawah, lalu simpan <strong>1</strong> di atas kolom puluhan.`;
+        } else {
+          step1_text += `<br>Tulis <strong>${sum_s}</strong> di bawah kolom satuan.`;
+        }
+
+        // Step 2: Puluhan
+        let sum_p = n1_p + n2_p + carry_s;
+        let step2_text = `<strong>② Kolom Puluhan (P):</strong><br>${n1_p} + ${n2_p}`;
+        if (carry_s > 0) step2_text += ` + 1 (simpanan)`;
+        step2_text += ` = ${sum_p}.`;
+        if (sum_p >= 10) {
+          carry_p = 1;
+          step2_text += `<br>Karena hasil ≥ 10, tulis <strong>${sum_p % 10}</strong> di bawah, lalu simpan <strong>1</strong> di atas kolom ratusan.`;
+        } else {
+          step2_text += `<br>Tulis <strong>${sum_p}</strong> di bawah kolom puluhan.`;
+        }
+
+        // Step 3: Ratusan
+        let sum_r = n1_r + n2_r + carry_p;
+        let step3_text = `<strong>③ Kolom Ratusan (R):</strong><br>${n1_r} + ${n2_r}`;
+        if (carry_p > 0) step3_text += ` + 1 (simpanan)`;
+        step3_text += ` = ${sum_r}.`;
+        step3_text += `<br>Tulis <strong>${sum_r}</strong> di bawah kolom ratusan.`;
+
+        stepsHtml = `
+          <div class="p-2.5 bg-purple-50 text-purple-950 rounded-xl text-xs">${step1_text}</div>
+          <div class="p-2.5 bg-blue-50 text-blue-950 rounded-xl text-xs">${step2_text}</div>
+          <div class="p-2.5 bg-emerald-50 text-emerald-950 rounded-xl text-xs">${step3_text}</div>
+          <div class="p-2.5 bg-indigo-900 text-amber-300 font-bold rounded-xl text-center text-sm">Hasil Total: ${finalResult}</div>
+        `;
+
+        // Render Column structure
+        columnRender.innerHTML = `
+          <!-- Carried Indicators Row -->
+          <div class="flex gap-4 text-red-500 text-xs font-bold h-6 items-center">
+            <span class="w-8 text-center">${carry_p > 0 ? '1' : ''}</span>
+            <span class="w-8 text-center">${carry_s > 0 ? '1' : ''}</span>
+            <span class="w-8"></span>
+          </div>
+          <!-- Number Row 1 -->
+          <div class="flex gap-4">
+            <span class="text-purple-500 w-8 text-center">${n1_r}</span>
+            <span class="text-blue-500 w-8 text-center">${n1_p}</span>
+            <span class="text-emerald-500 w-8 text-center">${n1_s}</span>
+          </div>
+          <!-- Number Row 2 -->
+          <div class="flex gap-4 relative">
+            <span class="absolute -left-6 top-1 text-slate-400 font-sans font-bold text-sm">+</span>
+            <span class="text-purple-500 w-8 text-center">${n2_r}</span>
+            <span class="text-blue-500 w-8 text-center">${n2_p}</span>
+            <span class="text-emerald-500 w-8 text-center">${n2_s}</span>
+          </div>
+          <hr class="w-36 border-t-4 border-slate-700 my-1 self-end">
+          <!-- Result Row -->
+          <div class="flex gap-4 text-orange-600">
+            <span class="w-8 text-center">${Math.floor(finalResult / 100) || ''}</span>
+            <span class="w-8 text-center">${Math.floor((finalResult % 100) / 10)}</span>
+            <span class="w-8 text-center">${finalResult % 10}</span>
+          </div>
+        `;
+
+      } else {
+        // === PENGURANGAN BERSUSUN ===
+        if (n1 < n2) {
+          stepsHtml = `<div class="p-4 bg-red-100 text-red-800 text-xs rounded-xl font-bold">Angka Atas tidak boleh lebih kecil dari Angka Bawah pada pengurangan Kelas 3 SD! Silakan tukar posisinya.</div>`;
+          columnRender.innerHTML = `<span class="text-red-500 text-xs">Error</span>`;
+          stepsContainer.innerHTML = stepsHtml;
+          return;
+        }
+
+        finalResult = n1 - n2;
+
+        let borrow_s = 0;
+        let borrow_p = 0;
+
+        // Step 1: Satuan
+        let step1_text = `<strong>① Kolom Satuan (S):</strong><br>`;
+        let actual_s1 = n1_s;
+        if (n1_s < n2_s) {
+          borrow_s = 1;
+          actual_s1 = n1_s + 10;
+          step1_text += `${n1_s} < ${n2_s} (tidak cukup dikurang!).<br>Pinjam 10 dari kolom puluhan sebelah kiri. Angka satuan berubah: ${n1_s} menjadi <strong>13</strong>.<br>
+            Hitung: 13 − ${n2_s} = <strong>${13 - n2_s}</strong>. Tulis ${13 - n2_s} di bawah.`;
+        } else {
+          step1_text += `${n1_s} − ${n2_s} = <strong>${n1_s - n2_s}</strong>. Tulis ${n1_s - n2_s} di bawah kolom satuan.`;
+        }
+
+        // Step 2: Puluhan
+        let step2_text = `<strong>② Kolom Puluhan (P):</strong><br>`;
+        let current_p1 = n1_p;
+        if (borrow_s > 0) {
+          current_p1 = n1_p - 1;
+          step2_text += `Angka ${n1_p} tadi sudah dipinjam 1, nilainya berkurang menjadi <strong>${current_p1}</strong>.<br>`;
+        }
+
+        let actual_p1 = current_p1;
+        if (current_p1 < n2_p) {
+          borrow_p = 1;
+          actual_p1 = current_p1 + 10;
+          step2_text += `${current_p1} < ${n2_p} (tidak cukup dikurang!).<br>Pinjam 10 dari kolom ratusan sebelah kiri. Angka puluhan berubah menjadi <strong>${actual_p1}</strong>.<br>
+            Hitung: ${actual_p1} − ${n2_p} = <strong>${actual_p1 - n2_p}</strong>. Tulis di bawah.`;
+        } else {
+          step2_text += `${current_p1} − ${n2_p} = <strong>${current_p1 - n2_p}</strong>. Tulis di bawah.`;
+        }
+
+        // Step 3: Ratusan
+        let step3_text = `<strong>③ Kolom Ratusan (R):</strong><br>`;
+        let current_r1 = n1_r;
+        if (borrow_p > 0) {
+          current_r1 = n1_r - 1;
+          step3_text += `Angka ${n1_r} tadi dipinjam 1 oleh puluhan, tersisa <strong>${current_r1}</strong>.<br>`;
+        }
+        step3_text += `${current_r1} − ${n2_r} = <strong>${current_r1 - n2_r}</strong>. Tulis di bawah.`;
+
+        stepsHtml = `
+          <div class="p-2.5 bg-purple-50 text-purple-950 rounded-xl text-xs">${step1_text}</div>
+          <div class="p-2.5 bg-blue-50 text-blue-950 rounded-xl text-xs">${step2_text}</div>
+          <div class="p-2.5 bg-emerald-50 text-emerald-950 rounded-xl text-xs">${step3_text}</div>
+          <div class="p-2.5 bg-indigo-900 text-amber-300 font-bold rounded-xl text-center text-sm">Hasil Total: ${finalResult}</div>
+        `;
+
+        // Render columns
+        columnRender.innerHTML = `
+          <!-- Borrow indicators row -->
+          <div class="flex gap-4 text-red-500 text-[10px] font-bold h-6 items-center">
+            <span class="w-8 text-center">${borrow_p > 0 ? (n1_r - 1) : ''}</span>
+            <span class="w-8 text-center">${borrow_s > 0 ? (n1_p - 1) : ''}</span>
+            <span class="w-8 text-center">${borrow_s > 0 ? (n1_s + 10) : ''}</span>
+          </div>
+          <!-- Number Row 1 with strikethroughs if borrowed -->
+          <div class="flex gap-4">
+            <span class="text-purple-500 w-8 text-center relative">${n1_r} ${borrow_p > 0 ? `<span class="absolute inset-0 border-t-2 border-red-500 rotate-45"></span>` : ''}</span>
+            <span class="text-blue-500 w-8 text-center relative">${n1_p} ${borrow_s > 0 ? `<span class="absolute inset-0 border-t-2 border-red-500 rotate-45"></span>` : ''}</span>
+            <span class="text-emerald-500 w-8 text-center relative">${n1_s} ${borrow_s > 0 ? `<span class="absolute inset-0 border-t-2 border-red-500 rotate-45"></span>` : ''}</span>
+          </div>
+          <!-- Number Row 2 -->
+          <div class="flex gap-4 relative">
+            <span class="absolute -left-6 top-1 text-slate-400 font-sans font-bold text-sm">−</span>
+            <span class="text-purple-500 w-8 text-center">${n2_r}</span>
+            <span class="text-blue-500 w-8 text-center">${n2_p}</span>
+            <span class="text-emerald-500 w-8 text-center">${n2_s}</span>
+          </div>
+          <hr class="w-36 border-t-4 border-slate-700 my-1 self-end">
+          <!-- Result -->
+          <div class="flex gap-4 text-orange-600">
+            <span class="w-8 text-center">${Math.floor(finalResult / 100) || ''}</span>
+            <span class="w-8 text-center">${Math.floor((finalResult % 100) / 10)}</span>
+            <span class="w-8 text-center">${finalResult % 10}</span>
+          </div>
+        `;
+      }
+
+      stepsContainer.innerHTML = stepsHtml;
+    }
+
+
+    // ==========================================
+    // TAB 3: SCRATCHPAD CANVAS SYSTEM
+    // ==========================================
+    const canvas = document.getElementById('scratch-canvas');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
+    let penColor = '#1e293b';
+    let penWidth = 3;
+
+    function resizeCanvas() {
+      // Dynamic scaling for high DPI displays
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = penColor;
+      ctx.lineWidth = penWidth;
+    }
+
+    // Canvas Events (Touch & Mouse support)
+    canvas.addEventListener('mousedown', (e) => { isDrawing = true; draw(e); });
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', () => { isDrawing = false; ctx.beginPath(); });
+    canvas.addEventListener('mouseleave', () => { isDrawing = false; ctx.beginPath(); });
+
+    canvas.addEventListener('touchstart', (e) => { isDrawing = true; drawTouch(e); });
+    canvas.addEventListener('touchmove', drawTouch);
+    canvas.addEventListener('touchend', () => { isDrawing = false; ctx.beginPath(); });
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function drawTouch(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    }
+
+    function setPenColor(color) {
+      playBeep('click');
+      penColor = color;
+      ctx.strokeStyle = color;
+    }
+
+    function setPenWidth(width) {
+      playBeep('click');
+      penWidth = width;
+      ctx.lineWidth = width;
+      
+      const btnThin = document.getElementById('pen-size-thin');
+      const btnThick = document.getElementById('pen-size-thick');
+      if (width === 3) {
+        btnThin.className = "px-2.5 py-1 text-xs font-bold rounded-lg bg-white shadow-sm";
+        btnThick.className = "px-2.5 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800";
+      } else {
+        btnThick.className = "px-2.5 py-1 text-xs font-bold rounded-lg bg-white shadow-sm";
+        btnThin.className = "px-2.5 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800";
+      }
+    }
+
+    function clearCanvas() {
+      playBeep('wrong');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+
+    // Global Init Setup on Page Load
+    window.onload = () => {
+      renderCurrentSlide();
+      buildSlideIndex();
+      resizeCanvas();
+      
+      // Auto-refresh canvas size when page resizes
+      window.addEventListener('resize', () => {
+        if (!document.getElementById('section-scratchpad').classList.contains('hidden')) {
+          resizeCanvas();
+        }
+      });
+    };
+  </script>
+
+  <!-- Shake Animations & Utilities style tags inside -->
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
+    .animate-shake {
+      animation: shake 0.3s ease-in-out;
+    }
+  </style>
+
+</body>
+</html>
