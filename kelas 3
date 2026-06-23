@@ -51,7 +51,7 @@
         </div>
         <div>
           <h1 class="font-header text-xl md:text-2xl tracking-wide text-amber-300">Dunia Matematika</h1>
-          <p class="text-xs text-indigo-200 font-semibold">Kurikulum Merdeka • Kelas 3 SD</p>
+          <p class="text-xs text-indigo-200 font-semibold"> • Kelas 3 SD</p>
         </div>
       </div>
 
@@ -398,7 +398,7 @@
               MATEMATIKA KELAS 3 SD
             </div>
             <div class="bg-lime-500 text-indigo-950 font-header text-xs md:text-sm px-4 py-1 rounded-full font-bold shadow-md">
-              Kurikulum Merdeka
+              
             </div>
             <div class="space-y-1">
               <h1 class="font-header text-4xl md:text-6xl text-amber-300 drop-shadow-md">Penjumlahan</h1>
